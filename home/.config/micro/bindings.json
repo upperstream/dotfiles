@@ -1,0 +1,17 @@
+{
+  "CtrlF":	"CursorRight",
+  "CtrlE":	"EndOfLine",
+  "CtrlA":	"StartOfLine",
+  "CtrlD":	"Delete",
+  "CtrlN":	"CursorDown",
+  "CtrlP":	"CursorUp",
+  "CtrlB":	"CursorLeft",
+  "CtrlC":	"CommandMode",
+  "CtrlU":	"Paste",
+  "CtrlV":	"CursorPageDown",
+  "CtrlW":	"Find",
+  "CtrlX":	"Quit",
+  "CtrlY":	"CursorPageUp",
+  "CtrlZ":	"Suspend",
+  "Alt-v":	"CursorPageUp"
+}

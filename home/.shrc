@@ -1,0 +1,12 @@
+test -f /etc/shrc && . /etc/shrc
+hostname=$(hostname | sed 's/\..*//')
+if [ -z "$hostname" ]; then
+	PS1="$(logname)"
+else
+	PS1="$(logname)@$hostname"
+fi
+case $(id -u) in
+	0) PS1="${PS1}# ";;
+	*) PS1="${PS1}$ ";;
+esac
+set -o emacs

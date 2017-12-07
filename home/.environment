@@ -1,0 +1,8 @@
+PATH=$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games
+export PATH HOME TERM
+
+MANPATH=/usr/share/man:/usr/X11R6/man:/usr/local/man
+export MANPATH
+
+PAGER=more
+export PAGER
