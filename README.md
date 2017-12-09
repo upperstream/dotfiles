@@ -14,13 +14,16 @@ Please note that you need the root privilege to run the script in order to perfo
 
 Tools to be installed are:
 
-* [Micro][] editor
 * [EditorConfig Core C][]
+* [Markdown][]
+* [Micro][] editor
+
 
 At the time of writing this, the script only supports [macOS][] and [OpenBSD][].
 
 [EditorConfig Core C]: https://github.com/editorconfig/editorconfig-core-c
 [macOS]: https://www.apple.com/lae/macos/high-sierra/ "macOS High Sierra - Apple"
+[Markdown]: https://daringfireball.net/projects/markdown/ "Daring Fireball: Markdown"
 [Micro]: https://micro-editor.github.io/ "Micro - Home"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
 
@@ -42,3 +45,7 @@ Files in this project are provided under the [ISC License][].
 See [LICENSE.txt](LICENSE.txt) file for details.
 
 [ISC License]: http://www.isc.org/downloads/software-support-policy/isc-license
+
+- - -
+
+Copyright &copy; 2017 Upperstream Software.

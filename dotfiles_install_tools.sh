@@ -23,7 +23,7 @@ install_editorconfig() {
 			;;
 		OpenBSD)
 			for t in cmake pcre; do
-				has $t || install $t
+				has $t || install_package $t
 			done
 			ftp -o- https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
@@ -31,11 +31,25 @@ install_editorconfig() {
 	esac
 }
 
+install_markdown() {
+	case `uname` in
+		OpenBSD)
+			install_package p5-Text-Markdown
+			;;
+		*)
+			install_package markdown
+			;;
+		esac
+}
+
 install() {
 	for t in $@; do
 		case $t in
 			editorconfig)
 				install_editorconfig
+				;;
+			Markdown)
+				install_markdown
 				;;
 			*)
 				install_package $t
@@ -57,3 +71,6 @@ has micro || install micro
 
 # EditorConfig Core C
 has editorconfig || install editorconfig
+
+# Markdown
+{ has Markdown || has Markdown.pl; } || install Markdown
