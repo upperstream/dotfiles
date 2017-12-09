@@ -74,3 +74,6 @@ has editorconfig || install editorconfig
 
 # Markdown
 { has Markdown || has Markdown.pl; } || install Markdown
+
+# lynx
+has lynx || install lynx
