@@ -14,6 +14,7 @@ Please note that you need the root privilege to run the script in order to perfo
 
 Tools to be installed are:
 
+* [dirstack][]
 * [EditorConfig Core C][]
 * [Lynx][]
 * [Markdown][]
@@ -22,6 +23,7 @@ Tools to be installed are:
 
 At the time of writing this, the script only supports [macOS][] and [OpenBSD][].
 
+[dirstack]: https://bitbucket.org/upperstream/dirstack "upperstream / dirstack   &mdash; Bitbucket"
 [EditorConfig Core C]: https://github.com/editorconfig/editorconfig-core-c
 [Lynx]: http://lynx.invisible-island.net/ "LYNX &ndash; The Text Web-Browser"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/ "macOS High Sierra - Apple"

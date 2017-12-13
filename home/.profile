@@ -11,15 +11,15 @@ fi
 
 case "$0" in
 	-ksh|-mksh)
-		. $HOME/bin/dirstack.sh
+		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
 		ENV=$HOME/.kshrc
 		;;
 	-sh)
-		. $HOME/bin/dirstack.sh
+		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
 		ENV=$HOME/.shrc
 		;;
 	-dash)
-		. $HOME/lib/dirstack.sh
+		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
 		ENV=$HOME/.shrc
 		;;
 	-bash)

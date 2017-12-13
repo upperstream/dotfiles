@@ -1,8 +1,17 @@
-PATH=$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games
+PATH=$HOME/.local/bin:$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games
 export PATH HOME TERM
 
 MANPATH=/usr/share/man:/usr/X11R6/man:/usr/local/man
 export MANPATH
+
+case `uname` in
+	FreeBSD|NetBSD|OpenBSD)
+		MANPATH=$MANPATH:$HOME/.local/man
+		;;
+	*)
+		MANPATH=$MANPATH:$HOME/.local/share/man
+		;;
+esac
 
 PAGER=more
 export PAGER
