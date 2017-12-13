@@ -25,8 +25,9 @@ install_editorconfig() {
 			for t in cmake pcre; do
 				has $t || install_package $t
 			done
+			has gcc || ftp -o- `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz | tar -zxf - -C /
 			ftp -o- https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz | tar -zxf - -C /tmp
-			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
+			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 			;;
 	esac
 }
