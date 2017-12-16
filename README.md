@@ -15,6 +15,7 @@ necessary.
 
 Tools to be installed are:
 
+* [cdiff][]
 * [dirstack][]
 * [EditorConfig Core C][]
 * [Lynx][]
@@ -23,9 +24,11 @@ Tools to be installed are:
 * GNU [nano][] editor
 
 
-At the time of writing this, the script only supports [NetBSD][],
-[macOS][] and [OpenBSD][].
+At the time of writing this, the script only supports [macOS][],
+[NetBSD][] and [OpenBSD][].
 
+[cdiff]: https://github.com/ymattw/cdiff
+    "ymattw/cdiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 [dirstack]: https://bitbucket.org/upperstream/dirstack
     "upperstream / dirstack   &mdash; Bitbucket"
 [EditorConfig Core C]:
