@@ -24,5 +24,6 @@ case "$0" in
 		;;
 	-bash)
 		ENV=$HOME/.bashrc
+		test -f $ENV && . $ENV
 		;;
 esac
