@@ -140,6 +140,9 @@ has micro || install micro
 # EditorConfig Core C
 has editorconfig || install editorconfig
 
+# nano
+has nano || install nano
+
 # Markdown
 { has Markdown || has Markdown.pl; } || install Markdown
 

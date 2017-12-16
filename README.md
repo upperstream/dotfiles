@@ -20,6 +20,7 @@ Tools to be installed are:
 * [Lynx][]
 * [Markdown][]
 * [Micro][] editor
+* GNU [nano][] editor
 
 
 At the time of writing this, the script only supports [NetBSD][],
@@ -36,6 +37,7 @@ At the time of writing this, the script only supports [NetBSD][],
 [Markdown]: https://daringfireball.net/projects/markdown/
     "Daring Fireball: Markdown"
 [Micro]: https://micro-editor.github.io/ "Micro - Home"
+[nano]: https://www.nano-editor.org/ "GNU nano"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
 
