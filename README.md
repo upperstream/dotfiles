@@ -1,16 +1,17 @@
 # Dotfiles
 
+Initial setup for tools and dot config files.
+
+
 ## Install tools
 
 The following command installs some tools for your convenience.
 
-    sudo ./dotfiles_install_tools.sh
+    ./dotfiles_install_tools.sh
 
-or
-
-    doas ./dotfiles_install_tools.sh
-
-Please note that you need the root privilege to run the script in order to perform actual installation.
+Please note that you should not invoke the script with the root
+privilege.  The script automatically asks for the root privilege when
+necessary.
 
 Tools to be installed are:
 
@@ -21,25 +22,35 @@ Tools to be installed are:
 * [Micro][] editor
 
 
-At the time of writing this, the script only supports [macOS][] and [OpenBSD][].
+At the time of writing this, the script only supports [NetBSD][],
+[macOS][] and [OpenBSD][].
 
-[dirstack]: https://bitbucket.org/upperstream/dirstack "upperstream / dirstack   &mdash; Bitbucket"
-[EditorConfig Core C]: https://github.com/editorconfig/editorconfig-core-c
-[Lynx]: http://lynx.invisible-island.net/ "LYNX &ndash; The Text Web-Browser"
-[macOS]: https://www.apple.com/lae/macos/high-sierra/ "macOS High Sierra - Apple"
-[Markdown]: https://daringfireball.net/projects/markdown/ "Daring Fireball: Markdown"
+[dirstack]: https://bitbucket.org/upperstream/dirstack
+    "upperstream / dirstack   &mdash; Bitbucket"
+[EditorConfig Core C]:
+    https://github.com/editorconfig/editorconfig-core-c
+[Lynx]: http://lynx.invisible-island.net/
+    "LYNX &ndash; The Text Web-Browser"
+[macOS]: https://www.apple.com/lae/macos/high-sierra/
+    "macOS High Sierra - Apple"
+[Markdown]: https://daringfireball.net/projects/markdown/
+    "Daring Fireball: Markdown"
 [Micro]: https://micro-editor.github.io/ "Micro - Home"
+[NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
 
 
 ## Create symbolic links to dotfiles
 
-The following command creates symbolic links in your home directory.  These links point to files in `home` directory.
+The following command creates symbolic links in your home directory.
+These links point to files in `home` directory.
 
     ./dotfiles_link_files.sh
 
-Add `-b` option to back up files to be replaced.  Backup files will be created in your `~/.dotfiles.d/backups/YYYYmmdd'T'HHMMSS` directory.
-Run the script with `-n` option does nothing but merely prints what will be done.
+Add `-b` option to back up files to be replaced.  Backup files will be
+created in your `~/.dotfiles.d/backups/YYYYmmdd'T'HHMMSS` directory.
+Run the script with `-n` option does nothing but merely prints what
+will be done.
 Execute `./dotfiles_link_files -H` to learn more options.
 
 
@@ -48,7 +59,8 @@ Execute `./dotfiles_link_files -H` to learn more options.
 Files in this project are provided under the [ISC License][].
 See [LICENSE.txt](LICENSE.txt) file for details.
 
-[ISC License]: http://www.isc.org/downloads/software-support-policy/isc-license
+[ISC License]:
+    http://www.isc.org/downloads/software-support-policy/isc-license
 
 - - -
 

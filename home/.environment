@@ -5,8 +5,12 @@ MANPATH=/usr/share/man:/usr/X11R6/man:/usr/local/man
 export MANPATH
 
 case `uname` in
-	FreeBSD|NetBSD|OpenBSD)
+	FreeBSD|OpenBSD)
 		MANPATH=$MANPATH:$HOME/.local/man
+		;;
+	NetBSD)
+		PATH=$PATH:/usr/pkg/bin
+		MANPATH=$MANPATH:/usr/pkg/man:$HOME/.local/man
 		;;
 	*)
 		MANPATH=$MANPATH:$HOME/.local/share/man

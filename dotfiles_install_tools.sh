@@ -10,6 +10,9 @@ install_package() {
 		Darwin)
 			brew install $@
 			;;
+		NetBSD)
+			sudo pkg_add $@
+			;;
 		OpenBSD)
 			doas pkg_add $@
 			;;
@@ -59,6 +62,9 @@ install_editorconfig() {
 		Darwin)
 			brew install editorconfig
 			;;
+		NetBSD)
+			install_package editorconfig-core
+			;;
 		OpenBSD)
 			for t in cmake pcre; do
 				has $t || install_package $t
@@ -76,11 +82,26 @@ install_editorconfig() {
 
 install_markdown() {
 	case `uname` in
-		OpenBSD)
+		NetBSD|OpenBSD)
 			install_package p5-Text-Markdown
 			;;
 		*)
 			install_package markdown
+			;;
+	esac
+}
+
+install_micro() {
+	case `uname` in
+		NetBSD)
+			{ has stow || install_package stow; } && \
+			{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
+			download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-netbsd64.tar.gz $HOME/.local/stow && \
+			{ mkdir -p $HOME/.local/stow/micro-1.3.4/bin && mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
+			(cd $HOME/.local/stow && stow micro-1.3.4)
+			;;
+		*)
+			install_package micro
 			;;
 	esac
 }
@@ -96,6 +117,9 @@ install() {
 				;;
 			Markdown)
 				install_markdown
+				;;
+			micro)
+				install_micro
 				;;
 			*)
 				install_package $t
