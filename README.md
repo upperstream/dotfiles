@@ -24,8 +24,8 @@ Tools to be installed are:
 * GNU [nano][] editor
 
 
-At the time of writing this, the script only supports [macOS][],
-[NetBSD][] and [OpenBSD][].
+At the time of writing this, the script only supports [FreeBSD][],
+[macOS][], [NetBSD][] and [OpenBSD][].
 
 [cdiff]: https://github.com/ymattw/cdiff
     "ymattw/cdiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
@@ -33,6 +33,7 @@ At the time of writing this, the script only supports [macOS][],
     "upperstream / dirstack   &mdash; Bitbucket"
 [EditorConfig Core C]:
     https://github.com/editorconfig/editorconfig-core-c
+[FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Lynx]: http://lynx.invisible-island.net/
     "LYNX &ndash; The Text Web-Browser"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/

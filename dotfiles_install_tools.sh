@@ -6,7 +6,6 @@
 set -x
 
 locate_pip() {
-set -x
 	pip=`command -v pip 2>/dev/null` || pip=`command -v pip2.7 2>/dev/null` || return 1
 	echo "pip=$pip"
 }
@@ -15,6 +14,9 @@ install_package() {
 	case `uname` in
 		Darwin)
 			brew install $@
+			;;
+		FreeBSD)
+			sudo pkg install -y $@
 			;;
 		NetBSD)
 			sudo pkg_add $@
@@ -30,7 +32,7 @@ install_package() {
 }
 
 determine_downloader() {
-	for name in ftp curl wget; do
+	for name in fetch ftp curl wget; do
 		has $name && { echo $name; return 0; }
 	done
 	install curl && { echo curl; return 0; }
@@ -42,6 +44,9 @@ downloader=""
 download() {
 	test -z "$downloader" && { downloader=`determine_downloader` || return 1; }
 	case $downloader in
+		fetch)
+			fetch -o- $1
+			;;
 		ftp)
 			ftp -o- $1
 			;;
@@ -55,8 +60,15 @@ download() {
 }
 
 install_cdiff() {
-	has pip || install pip
-	$pip install --user cdiff
+	case `uname` in
+		FreeBSD)
+			install_package cdiff
+			;;
+		*)
+			has pip || install pip
+			$pip install --user cdiff
+			;;
+	esac
 }
 
 install_dirstack() {
@@ -72,6 +84,9 @@ install_editorconfig() {
 	case `uname` in
 		Darwin)
 			brew install editorconfig
+			;;
+		FreeBSD)
+			install_package editorconfig-core-c
 			;;
 		NetBSD)
 			install_package editorconfig-core
@@ -93,7 +108,7 @@ install_editorconfig() {
 
 install_markdown() {
 	case `uname` in
-		NetBSD|OpenBSD)
+		FreeBSD|NetBSD|OpenBSD)
 			install_package p5-Text-Markdown
 			;;
 		*)
@@ -118,7 +133,6 @@ install_micro() {
 }
 
 install_pip() {
-set -x
 	case `uname` in
 		NetBSD)
 			install_package py27-pip
