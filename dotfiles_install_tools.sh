@@ -13,11 +13,14 @@ install_package() {
 		OpenBSD)
 			doas pkg_add $@
 			;;
+		*)
+			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			return 1
+			;;
 	esac
 }
 
 determine_downloader() {
-	set -x
 	for name in ftp curl wget; do
 		has $name && { echo $name; return 0; }
 	done
@@ -28,7 +31,6 @@ determine_downloader() {
 downloader=""
 
 download() {
-	set -x
 	test -z "$downloader" && { downloader=`determine_downloader` || return 1; }
 	case $downloader in
 		ftp)
@@ -44,7 +46,6 @@ download() {
 }
 
 install_dirstack() {
-	set -x
 	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz /tmp || return 1
 	(cd /tmp/upperstream-dirstack-* && \
 	printf "s/^M/# M/\n/# .*`uname`/ {N; s/\\\n# /\\\\\n/; }\ns:^PREFIX = /usr/local:PREFIX = \${HOME}/.local:" > config.sed && \
@@ -66,6 +67,10 @@ install_editorconfig() {
 			download https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz /tmp
 			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 			;;
+		*)
+			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			return 1
+			;;
 	esac
 }
 
@@ -77,7 +82,7 @@ install_markdown() {
 		*)
 			install_package markdown
 			;;
-		esac
+	esac
 }
 
 install() {
@@ -96,6 +101,8 @@ install() {
 				install_package $t
 				;;
 		esac
+		rc=$?
+		test $rc -ne 0 && return $rc
 	done
 }
 
