@@ -1,19 +1,19 @@
-PATH=$HOME/.local/bin:$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games
+PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games
 export PATH HOME TERM
 
-MANPATH=/usr/share/man:/usr/X11R6/man:/usr/local/man
+MANPATH=/usr/local/man:/usr/share/man:/usr/X11R6/man
 export MANPATH
 
 case `uname` in
 	FreeBSD|OpenBSD)
-		MANPATH=$MANPATH:$HOME/.local/man
+		MANPATH=$HOME/.local/man:$MANPATH
 		;;
 	NetBSD)
-		PATH=$PATH:/usr/pkg/bin
-		MANPATH=$MANPATH:/usr/pkg/man:$HOME/.local/man
+		PATH=/usr/pkg/bin:$PATH
+		MANPATH=$HOME/.local/man:/usr/pkg/man:$MANPATH
 		;;
 	*)
-		MANPATH=$MANPATH:$HOME/.local/share/man
+		MANPATH=$HOME/.local/share/man:$MANPATH
 		;;
 esac
 
