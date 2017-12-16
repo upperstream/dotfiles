@@ -69,7 +69,7 @@ install_editorconfig() {
 			for t in cmake pcre; do
 				has $t || install_package $t
 			done
-			has gcc || download `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz /
+			has gcc || ftp -o- `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz | doas tar -zxvpf - -C /
 			download https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz /tmp
 			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 			;;
