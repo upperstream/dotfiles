@@ -3,19 +3,22 @@
 # Copyright (C) 2017 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
-set -x
+#set -x
 
 usage() {
 	cat <<-EOF
 	Usage
 	$0 [-x]
-	$0 -H
+	$0 -H|--help
 
 	-x : install additional tools for X Window System; this may install
 	     X Window System as a part of dependencies
-	-H : print this help summary message and exit
+	-H|--help
+	   : print this help summary and exit
 EOF
 }
+
+test "$1" = "--help" && { usage; exit 255; }
 
 with_x11=0
 

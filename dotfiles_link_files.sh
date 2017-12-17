@@ -11,7 +11,7 @@ usage() {
 	cat <<-EOF
 	Usage:
 	$0 [-bnq] [-x patterns] [[src_dir] dest_dir]
-	$0 -H
+	$0 -H|--help
 
 	src_dir
 	   : source directory where dot files to be linked are.  \`./home' is
@@ -24,7 +24,8 @@ usage() {
 	-q : quiet mode; print nothing unless \`-n' option is specified
 	-x patterns
 	   : exclude list separated by colon (\`:')
-	-H : print this help summary and exit
+	-H|--help
+	   : print this help summary and exit
 EOF
 }
 
@@ -55,6 +56,8 @@ excludes=""
 backup_dir=""
 print_only=0
 quiet_mode=0
+
+test "$1" = "--help" && { usage; exit 255; }
 
 while getopts bnqx:H opt; do
 	case $opt in
