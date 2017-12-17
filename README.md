@@ -5,9 +5,14 @@ Initial setup for tools and dot config files.
 
 ## Install tools
 
-The following command installs some tools for your convenience.
+The following command installs some tools for your convenience:
 
     ./dotfiles_install_tools.sh
+
+When an option `-x` is specified, additional tools for X Window System
+will be installed as well.  Note that this may install X Window System
+as a part of dependencies.
+Execute `./dotfiles_link_files -H` to learn more options.
 
 Please note that you should not invoke the script with the root
 privilege.  The script automatically asks for the root privilege when
@@ -25,6 +30,9 @@ Tools to be installed are:
 * [Micro][] editor
 * GNU [nano][] editor
 
+Tools for X Window System to be installed are:
+
+* [XSel][] or [xclip][]
 
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][] and [OpenBSD][].
@@ -51,6 +59,9 @@ At the time of writing this, the script supports [FreeBSD][],
 [nano]: https://www.nano-editor.org/ "GNU nano"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
+[xclip]: https://github.com/astrand/xclip
+    "astrand/xclip: Command line interface to the X11 clipboard"
+[XSel]: http://www.kfish.org/software/xsel/ "XSel by Conrad Parker"
 
 
 ## Create symbolic links to dotfiles

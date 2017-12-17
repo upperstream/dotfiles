@@ -5,6 +5,27 @@
 
 set -x
 
+usage() {
+	cat <<-EOF
+	Usage
+	$0 [-x]
+	$0 -H
+
+	-x : install additional tools for X Window System; this may install
+	     X Window System as a part of dependencies
+	-H : print this help summary message and exit
+EOF
+}
+
+with_x11=0
+
+while getopts xH opt; do
+	case $opt in
+		x) with_x11=1;;
+		H) usage; exit 255;;
+	esac
+done
+
 locate_pip() {
 	pip=`command -v pip 2>/dev/null` || pip=`command -v pip2.7 2>/dev/null` || return 1
 	echo "pip=$pip"
@@ -188,6 +209,27 @@ install_pip() {
 	return $?
 }
 
+install_xsel() {
+	case `uname` in
+		Darwin)
+			brew install xclip
+			;;
+		FreeBSD|NetBSD)
+			install_package xsel
+			;;
+		OpenBSD)
+			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
+				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | doas tar -zxpf - -C /
+			fi
+			install_package xsel
+			;;
+		*)
+			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			return 1
+			;;
+	esac
+}
+
 install() {
 	for t in $@; do
 		case $t in
@@ -214,6 +256,9 @@ install() {
 				;;
 			pip)
 				install_pip
+				;;
+			xsel)
+				install_xsel
 				;;
 			*)
 				install_package $t
@@ -256,3 +301,10 @@ has cdiff || install cdiff
 
 # dvtm
 has dvtm || install dvtm
+
+test $with_x11 -eq 1 || exit
+
+# Additional tools for X Window System
+
+# XSel or xclip
+{ has xsel || has xclip; } || install xsel
