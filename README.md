@@ -27,6 +27,7 @@ Tools to be installed are:
 * [EditorConfig Core C][]
 * [Lynx][]
 * [Markdown][]
+* [mg][]
 * [Micro][] editor
 * GNU [nano][] editor
 
@@ -55,6 +56,7 @@ At the time of writing this, the script supports [FreeBSD][],
     "macOS High Sierra - Apple"
 [Markdown]: https://daringfireball.net/projects/markdown/
     "Daring Fireball: Markdown"
+[mg]: https://homepage.boetes.org/software/mg/
 [Micro]: https://micro-editor.github.io/ "Micro - Home"
 [nano]: https://www.nano-editor.org/ "GNU nano"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"

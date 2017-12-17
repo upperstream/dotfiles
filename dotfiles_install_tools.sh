@@ -305,6 +305,9 @@ has cdiff || install cdiff
 # dvtm
 has dvtm || install dvtm
 
+# mg
+has mg || install mg
+
 test $with_x11 -eq 1 || exit
 
 # Additional tools for X Window System
