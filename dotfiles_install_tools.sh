@@ -59,6 +59,22 @@ download() {
 	esac
 }
 
+install_abduco() {
+	case `uname` in
+		Darwin|FreeBSD)
+			install_package abduco
+			;;
+		NetBSD|OpenBSD)
+			install_package dtach
+			;;
+		*)
+			download http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz | tar -zxf - -C /tmp && \
+			(cd /tmp/abduco-*; make && sudo make install) && \
+			rm -rf /tmp/abduco-*
+			;;
+	esac
+}
+
 install_cdiff() {
 	case `uname` in
 		FreeBSD)
@@ -153,6 +169,9 @@ install_pip() {
 install() {
 	for t in $@; do
 		case $t in
+			abduco)
+				install_abduco
+				;;
 			cdiff)
 				install_cdiff
 				;;
@@ -206,3 +225,6 @@ has pushd || install dirstack
 
 # cdiff
 has cdiff || install cdiff
+
+# adbuco or dtach
+{ has abduco || has dtach; } || install abduco

@@ -15,6 +15,7 @@ necessary.
 
 Tools to be installed are:
 
+* [abduco][] or [dtach][]
 * [cdiff][]
 * [dirstack][]
 * [EditorConfig Core C][]
@@ -24,13 +25,16 @@ Tools to be installed are:
 * GNU [nano][] editor
 
 
-At the time of writing this, the script only supports [FreeBSD][],
+At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][] and [OpenBSD][].
 
+[abduco]: http://www.brain-dump.org/projects/abduco/
+    "abduco || a tool for session [at|de]tach support"
 [cdiff]: https://github.com/ymattw/cdiff
     "ymattw/cdiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 [dirstack]: https://bitbucket.org/upperstream/dirstack
     "upperstream / dirstack   &mdash; Bitbucket"
+[dtach]: http://dtach.sourceforge.net/ "dtach"
 [EditorConfig Core C]:
     https://github.com/editorconfig/editorconfig-core-c
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
