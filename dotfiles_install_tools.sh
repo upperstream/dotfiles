@@ -96,6 +96,28 @@ install_dirstack() {
 	rm -rf /tmp/upperstream-dirstack-*
 }
 
+install_dvtm() {
+	case `uname` in
+		Darwin)
+			brew install ncurses
+			brew link --force ncurses
+			download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
+			(cd /tmp/dvtm-*; \
+			(rm config.mk; sed '/^CPPFLAGS =/ s/-D_POSIX_C_SOURCE=[^ ]*//; s/-D_XOPEN_SOURCE[^ ]*//g' > config.mk) < config.mk && \
+			make && sudo make install) && \
+			rm -rf /tmp/dvtm-*
+			;;
+		FreeBSD|NetBSD|OpenBSD)
+			install_package dvtm
+			;;
+		*)
+			download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
+			(cd /tmp/dvtm-*; make && sudo make install) && \
+			rm -rf /tmp/dvtm-*
+			;;
+	esac
+}
+
 install_editorconfig() {
 	case `uname` in
 		Darwin)
@@ -178,6 +200,9 @@ install() {
 			dirstack)
 				install_dirstack
 				;;
+			dvtm)
+				install_dvtm
+				;;
 			editorconfig)
 				install_editorconfig
 				;;
@@ -228,3 +253,6 @@ has cdiff || install cdiff
 
 # adbuco or dtach
 { has abduco || has dtach; } || install abduco
+
+# dvtm
+has dvtm || install dvtm

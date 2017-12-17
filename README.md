@@ -18,6 +18,7 @@ Tools to be installed are:
 * [abduco][] or [dtach][]
 * [cdiff][]
 * [dirstack][]
+* [dvtm][]
 * [EditorConfig Core C][]
 * [Lynx][]
 * [Markdown][]
@@ -35,6 +36,8 @@ At the time of writing this, the script supports [FreeBSD][],
 [dirstack]: https://bitbucket.org/upperstream/dirstack
     "upperstream / dirstack   &mdash; Bitbucket"
 [dtach]: http://dtach.sourceforge.net/ "dtach"
+[dvtm]: http://www.brain-dump.org/projects/dvtm/
+    "dvtm || dynamic virtual terminal manager"
 [EditorConfig Core C]:
     https://github.com/editorconfig/editorconfig-core-c
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
