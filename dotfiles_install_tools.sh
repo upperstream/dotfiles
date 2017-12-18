@@ -35,9 +35,11 @@ locate_pip() {
 }
 
 install_package() {
+	cask=""
+	test "$1" = "-c" && { cask="cask"; shift; }
 	case `uname` in
 		Darwin)
-			brew install $@
+			brew $cask install $@
 			;;
 		FreeBSD)
 			sudo pkg install -y $@
@@ -168,6 +170,52 @@ install_editorconfig() {
 	esac
 }
 
+install_emacs() {
+	case `uname` in
+		Darwin)
+			brew uninstall emacs
+			install_package -c emacs
+			;;
+		FreeBSD)
+			install_package emacs25
+			;;
+		NetBSD)
+			sudo pkg_delete emacs-nox11 || true
+			install_package emacs
+			;;
+		OpenBSD)
+			doas pkg_delete emacs-25.3-no_x11 || true
+			install_package emacs-25.3-gtk2
+			;;
+		*)
+			install_package -c emacs
+			;;
+	esac
+}
+
+install_emacs_nox11() {
+	case `uname` in
+		Darwin)
+			brew cask uninstall emacs
+			install_package emacs
+			;;
+		FreeBSD)
+			install_package emacs-nox11
+			;;
+		NetBSD)
+			sudo pkg_delete emacs || true
+			install_package emacs-nox11
+			;;
+		OpenBSD)
+			doas pkg_delete emacs-25.3-gtk2 || true
+			install_package emacs-25.3-no_x11
+			;;
+		*)
+			install_package emacs-nox11
+			;;
+	esac
+}
+
 install_markdown() {
 	case `uname` in
 		FreeBSD|NetBSD|OpenBSD)
@@ -251,6 +299,12 @@ install() {
 			editorconfig)
 				install_editorconfig
 				;;
+			emacs)
+				install_emacs
+				;;
+			emacs-nox11)
+				install_emacs_nox11
+				;;
 			Markdown)
 				install_markdown
 				;;
@@ -308,9 +362,15 @@ has dvtm || install dvtm
 # mg
 has mg || install mg
 
+# Emacs
+test $with_x11 -eq 0 && install emacs-nox11
+
 test $with_x11 -eq 1 || exit
 
 # Additional tools for X Window System
 
 # XSel or xclip
 { has xsel || has xclip; } || install xsel
+
+# Emacs
+install emacs

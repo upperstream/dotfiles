@@ -25,6 +25,7 @@ Tools to be installed are:
 * [dirstack][]
 * [dvtm][]
 * [EditorConfig Core C][]
+* GNU [Emacs][] without window system support
 * [Lynx][]
 * [Markdown][]
 * [mg][]
@@ -33,6 +34,7 @@ Tools to be installed are:
 
 Tools for X Window System to be installed are:
 
+* GNU Emacs with window system support
 * [XSel][] or [xclip][]
 
 At the time of writing this, the script supports [FreeBSD][],
@@ -49,6 +51,7 @@ At the time of writing this, the script supports [FreeBSD][],
     "dvtm || dynamic virtual terminal manager"
 [EditorConfig Core C]:
     https://github.com/editorconfig/editorconfig-core-c
+[Emacs]: https://www.gnu.org/software/emacs/ "GNU Emacs - GNU Project"
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Lynx]: http://lynx.invisible-island.net/
     "LYNX &ndash; The Text Web-Browser"
