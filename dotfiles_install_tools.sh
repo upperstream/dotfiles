@@ -35,10 +35,63 @@ locate_pip() {
 }
 
 os=""
+distribution=""
 
 determine_operating_system() {
 	test -z "$os" && os=`uname`
+	if [ "$os" = "Linux" ]; then
+		name=`cat /etc/*release | grep -F "NAME="`
+		case $name in
+			*CentOS*)
+				distribution="CentOS"
+				;;
+			*Debian*)
+				distribution="Debian"
+				;;
+			*Ubuntu*)
+				distribution="Ubuntu"
+				;;
+			*)
+				echo "$0: Warning: Unknown distribution: $name" 1>&2
+				;;
+		esac
+	fi
+
 	echo "OS=$os"
+	test "$os" = "Linux" && echo "DISTRIBUTION=$distribution"
+}
+
+pkgmgr=""
+
+determine_package_manager() {
+	for name in apt-get yum; do
+		has $name && { echo $name; return 0; }
+	done
+	return 1
+}
+
+sudo=""
+determine_sudo_command() {
+	for name in sudo doas; do
+		if has $name; then
+			sudo=$name
+			echo "sudo=$name"
+			return 0
+		fi
+	done
+	return 1
+}
+
+linux_install_package() {
+	test -z "$pkgmgr" && { pkgmgr=`determine_package_manager` || return 1; }
+	case $pkgmgr in
+		apt-get)
+			$sudo apt-get install -y $@
+			;;
+		yum)
+			$sudo yum install -y $@
+			;;
+	esac
 }
 
 install_package() {
@@ -49,13 +102,16 @@ install_package() {
 			brew $cask install $@
 			;;
 		FreeBSD)
-			sudo pkg install -y $@
+			$sudo pkg install -y $@
+			;;
+		Linux)
+			linux_install_package $@
 			;;
 		NetBSD)
-			sudo pkg_add $@
+			$sudo pkg_add $@
 			;;
 		OpenBSD)
-			doas pkg_add $@
+			$sudo pkg_add $@
 			;;
 		*)
 			echo "$0: Error: Unsupported platform: $os" 1>&2
@@ -97,12 +153,15 @@ install_abduco() {
 		Darwin|FreeBSD)
 			install_package abduco
 			;;
+		Linux)
+			linux_install_package abduco
+			;;
 		NetBSD|OpenBSD)
 			install_package dtach
 			;;
 		*)
 			download http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz | tar -zxf - -C /tmp && \
-			(cd /tmp/abduco-*; make && sudo make install) && \
+			(cd /tmp/abduco-*; make && $sudo make install) && \
 			rm -rf /tmp/abduco-*
 			;;
 	esac
@@ -129,6 +188,12 @@ install_dirstack() {
 	rm -rf /tmp/upperstream-dirstack-*
 }
 
+install_from_source_dvtm() {
+	download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
+	(cd /tmp/dvtm-*; make && $sudo make install) && \
+	rm -rf /tmp/dvtm-*
+}
+
 install_dvtm() {
 	case $os in
 		Darwin)
@@ -137,18 +202,33 @@ install_dvtm() {
 			download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/dvtm-*; \
 			(rm config.mk; sed '/^CPPFLAGS =/ s/-D_POSIX_C_SOURCE=[^ ]*//; s/-D_XOPEN_SOURCE[^ ]*//g' > config.mk) < config.mk && \
-			make && sudo make install) && \
+			make && $sudo make install) && \
 			rm -rf /tmp/dvtm-*
 			;;
 		FreeBSD|NetBSD|OpenBSD)
 			install_package dvtm
 			;;
+		Linux)
+			case $distribution in
+				CentOS)
+					linux_install_package ncurses-devel
+					has gcc || linux_install_package gcc
+					install_from_source_dvtm
+					;;
+				Debian|Ubuntu)
+					linux_install_package dvtm
+					;;
+			esac
+			;;
 		*)
-			download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
-			(cd /tmp/dvtm-*; make && sudo make install) && \
-			rm -rf /tmp/dvtm-*
+			install_from_source_dvtm
 			;;
 	esac
+}
+
+install_from_source_editorconfig() {
+	download https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz | tar -zxf - -C /tmp
+	(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && $sudo make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 }
 
 install_editorconfig() {
@@ -159,6 +239,24 @@ install_editorconfig() {
 		FreeBSD)
 			install_package editorconfig-core-c
 			;;
+		Linux)
+			case $distribution in
+				CentOS)
+					for t in cmake pcre-devel; do
+						linux_install_package $t
+					done
+					has gcc || linux_install_package gcc
+					install_from_source_editorconfig
+					;;
+				Debian|Ubuntu)
+					linux_install_package editorconfig
+					;;
+				*)
+					echo "$0: Error: Unsupported platform: $os" 1>&2
+					return 1
+					;;
+			esac
+			;;
 		NetBSD)
 			install_package editorconfig-core
 			;;
@@ -166,9 +264,8 @@ install_editorconfig() {
 			for t in cmake pcre; do
 				has $t || install_package $t
 			done
-			has gcc || download `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz | doas tar -zxpf - -C /
-			download https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz | tar -zxf - -C /tmp
-			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
+			has gcc || download `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
+			install_from_source_editorconfig
 			;;
 		*)
 			echo "$0: Error: Unsupported platform: $os" 1>&2
@@ -186,12 +283,19 @@ install_emacs() {
 		FreeBSD)
 			install_package emacs25
 			;;
+		Linux)
+			case $distribution in
+				CentOS) linux_install_package emacs;;
+				Debian) linux_install_package emacs25;;
+				Ubuntu) linux_install_package emacs24;;
+			esac
+			;;
 		NetBSD)
-			sudo pkg_delete emacs-nox11 || true
+			$sudo pkg_delete emacs-nox11 || true
 			install_package emacs
 			;;
 		OpenBSD)
-			doas pkg_delete emacs-25.3-no_x11 || true
+			$sudo pkg_delete emacs-25.3-no_x11 || true
 			install_package emacs-25.3-gtk2
 			;;
 		*)
@@ -209,12 +313,19 @@ install_emacs_nox11() {
 		FreeBSD)
 			install_package emacs-nox11
 			;;
+		Linux)
+			case $distribution in
+				CentOS) linux_install_package emacs-nox;;
+				Debian) linux_install_package emacs25-nox;;
+				Ubuntu) linux_install_package emacs24-nox;;
+			esac
+			;;
 		NetBSD)
-			sudo pkg_delete emacs || true
+			$sudo pkg_delete emacs || true
 			install_package emacs-nox11
 			;;
 		OpenBSD)
-			doas pkg_delete emacs-25.3-gtk2 || true
+			$sudo pkg_delete emacs-25.3-gtk2 || true
 			install_package emacs-25.3-no_x11
 			;;
 		*)
@@ -228,20 +339,41 @@ install_markdown() {
 		FreeBSD|NetBSD|OpenBSD)
 			install_package p5-Text-Markdown
 			;;
+		Linux)
+			case $distribution in
+				CentOS) linux_install_package perl-Text-Markdown;;
+				*)      linux_install_package markdown;;
+			esac
+			;;
 		*)
 			install_package markdown
 			;;
 	esac
 }
 
-install_micro() {
-	case $os in
-		NetBSD)
+__install_micro() {
+	case $1 in
+		linux64|netbsd64)
 			{ has stow || install_package stow; } && \
 			{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
-			download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-netbsd64.tar.gz | tar zxf - -C $HOME/.local/stow && \
+			download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz | tar zxf - -C $HOME/.local/stow && \
 			{ mkdir -p $HOME/.local/stow/micro-1.3.4/bin && mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
 			(cd $HOME/.local/stow && stow micro-1.3.4)
+			;;
+		*)
+			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			return 1
+			;;
+	esac
+}
+
+install_micro() {
+	case $os in
+		Linux)
+			__install_micro linux64
+			;;
+		NetBSD)
+			__install_micro netbsd64
 			;;
 		*)
 			install_package micro
@@ -251,6 +383,16 @@ install_micro() {
 
 install_pip() {
 	case $os in
+		Linux)
+			case $distribution in
+				CentOS)
+					linux_install_package python2-pip
+					;;
+				Debian|Ubuntu)
+					install_package python-pip
+					;;
+			esac
+			;;
 		NetBSD)
 			install_package py27-pip
 			;;
@@ -275,9 +417,12 @@ install_xsel() {
 		FreeBSD|NetBSD)
 			install_package xsel
 			;;
+		Linux)
+			install_package xsel
+			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | doas tar -zxpf - -C /
+				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
 			fi
 			install_package xsel
 			;;
@@ -339,6 +484,7 @@ has() {
 
 locate_pip
 determine_operating_system
+determine_sudo_command
 
 # Micro editor
 has micro || install micro

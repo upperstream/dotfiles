@@ -20,53 +20,40 @@ necessary.
 
 Tools to be installed are:
 
-* [abduco][] or [dtach][]
-* [cdiff][]
-* [dirstack][]
-* [dvtm][]
-* [EditorConfig Core C][]
-* GNU [Emacs][] without window system support
-* [Lynx][]
-* [Markdown][]
-* [mg][]
-* [Micro][] editor
-* GNU [nano][] editor
+* [abduco](http://www.brain-dump.org/projects/abduco/) or
+  [dtach](http://dtach.sourceforge.net/)
+* [cdiff](https://github.com/ymattw/cdiff)
+* [dirstack](https://bitbucket.org/upperstream/dirstack)
+* [dvtm](http://www.brain-dump.org/projects/dvtm/)
+* [EditorConfig C Core](https://github.com/editorconfig/editorconfig-core-c)
+* GNU [Emacs](https://www.gnu.org/software/emacs/) without window
+  system support
+* [Lynx](http://lynx.invisible-island.net/)
+* [Markdown](https://daringfireball.net/projects/markdown/)
+* [mg](https://homepage.boetes.org/software/mg/)
+* [Micro](https://micro-editor.github.io/) editor
+* GNU [nano](https://www.nano-editor.org/) editor
 
 Tools for X Window System to be installed are:
 
 * GNU Emacs with window system support
-* [XSel][] or [xclip][]
+* [XSel](http://www.kfish.org/software/xsel/) or
+  [xclip](https://github.com/astrand/xclip)
 
 At the time of writing this, the script supports [FreeBSD][],
-[macOS][], [NetBSD][] and [OpenBSD][].
+[macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
+distributions:
 
-[abduco]: http://www.brain-dump.org/projects/abduco/
-    "abduco || a tool for session [at|de]tach support"
-[cdiff]: https://github.com/ymattw/cdiff
-    "ymattw/cdiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
-[dirstack]: https://bitbucket.org/upperstream/dirstack
-    "upperstream / dirstack   &mdash; Bitbucket"
-[dtach]: http://dtach.sourceforge.net/ "dtach"
-[dvtm]: http://www.brain-dump.org/projects/dvtm/
-    "dvtm || dynamic virtual terminal manager"
-[EditorConfig Core C]:
-    https://github.com/editorconfig/editorconfig-core-c
-[Emacs]: https://www.gnu.org/software/emacs/ "GNU Emacs - GNU Project"
+* [CentOS](https://www.centos.org/)
+* [Debian](https://www.debian.org/)
+* [Ubuntu](https://www.ubuntu.com/)
+
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
-[Lynx]: http://lynx.invisible-island.net/
-    "LYNX &ndash; The Text Web-Browser"
+[Linux]: https://www.kernel.org/ "https://www.kernel.org/"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
-[Markdown]: https://daringfireball.net/projects/markdown/
-    "Daring Fireball: Markdown"
-[mg]: https://homepage.boetes.org/software/mg/
-[Micro]: https://micro-editor.github.io/ "Micro - Home"
-[nano]: https://www.nano-editor.org/ "GNU nano"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
-[xclip]: https://github.com/astrand/xclip
-    "astrand/xclip: Command line interface to the X11 clipboard"
-[XSel]: http://www.kfish.org/software/xsel/ "XSel by Conrad Parker"
 
 
 ## Create symbolic links to dotfiles
