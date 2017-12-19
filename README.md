@@ -49,7 +49,7 @@ distributions:
 * [Ubuntu](https://www.ubuntu.com/)
 
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
-[Linux]: https://www.kernel.org/ "https://www.kernel.org/"
+[Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
