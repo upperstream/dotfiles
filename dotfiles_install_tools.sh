@@ -34,10 +34,17 @@ locate_pip() {
 	echo "pip=$pip"
 }
 
+os=""
+
+determine_operating_system() {
+	test -z "$os" && os=`uname`
+	echo "OS=$os"
+}
+
 install_package() {
 	cask=""
 	test "$1" = "-c" && { cask="cask"; shift; }
-	case `uname` in
+	case $os in
 		Darwin)
 			brew $cask install $@
 			;;
@@ -51,7 +58,7 @@ install_package() {
 			doas pkg_add $@
 			;;
 		*)
-			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			echo "$0: Error: Unsupported platform: $os" 1>&2
 			return 1
 			;;
 	esac
@@ -86,7 +93,7 @@ download() {
 }
 
 install_abduco() {
-	case `uname` in
+	case $os in
 		Darwin|FreeBSD)
 			install_package abduco
 			;;
@@ -102,7 +109,7 @@ install_abduco() {
 }
 
 install_cdiff() {
-	case `uname` in
+	case $os in
 		FreeBSD)
 			install_package cdiff
 			;;
@@ -116,14 +123,14 @@ install_cdiff() {
 install_dirstack() {
 	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz | tar -zxf - -C /tmp || return 1
 	(cd /tmp/upperstream-dirstack-* && \
-	printf "s/^M/# M/\n/# .*`uname`/ {N; s/\\\n# /\\\\\n/; }\ns:^PREFIX = /usr/local:PREFIX = \${HOME}/.local:" > config.sed && \
+	printf "s/^M/# M/\n/# .*$os/ {N; s/\\\n# /\\\\\n/; }\ns:^PREFIX = /usr/local:PREFIX = \${HOME}/.local:" > config.sed && \
 	(rm config.mk && sed -f config.sed > config.mk) < config.mk && \
 	make install) && \
 	rm -rf /tmp/upperstream-dirstack-*
 }
 
 install_dvtm() {
-	case `uname` in
+	case $os in
 		Darwin)
 			brew install ncurses
 			brew link --force ncurses
@@ -145,7 +152,7 @@ install_dvtm() {
 }
 
 install_editorconfig() {
-	case `uname` in
+	case $os in
 		Darwin)
 			brew install editorconfig
 			;;
@@ -164,14 +171,14 @@ install_editorconfig() {
 			(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && doas make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 			;;
 		*)
-			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			echo "$0: Error: Unsupported platform: $os" 1>&2
 			return 1
 			;;
 	esac
 }
 
 install_emacs() {
-	case `uname` in
+	case $os in
 		Darwin)
 			brew uninstall emacs
 			install_package -c emacs
@@ -194,7 +201,7 @@ install_emacs() {
 }
 
 install_emacs_nox11() {
-	case `uname` in
+	case $os in
 		Darwin)
 			brew cask uninstall emacs
 			install_package emacs
@@ -217,7 +224,7 @@ install_emacs_nox11() {
 }
 
 install_markdown() {
-	case `uname` in
+	case $os in
 		FreeBSD|NetBSD|OpenBSD)
 			install_package p5-Text-Markdown
 			;;
@@ -228,7 +235,7 @@ install_markdown() {
 }
 
 install_micro() {
-	case `uname` in
+	case $os in
 		NetBSD)
 			{ has stow || install_package stow; } && \
 			{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
@@ -243,7 +250,7 @@ install_micro() {
 }
 
 install_pip() {
-	case `uname` in
+	case $os in
 		NetBSD)
 			install_package py27-pip
 			;;
@@ -261,7 +268,7 @@ install_pip() {
 }
 
 install_xsel() {
-	case `uname` in
+	case $os in
 		Darwin)
 			brew install xclip
 			;;
@@ -275,7 +282,7 @@ install_xsel() {
 			install_package xsel
 			;;
 		*)
-			echo "$0: Error: Unsupported platform: `uname`" 1>&2
+			echo "$0: Error: Unsupported platform: $os" 1>&2
 			return 1
 			;;
 	esac
@@ -331,6 +338,7 @@ has() {
 }
 
 locate_pip
+determine_operating_system
 
 # Micro editor
 has micro || install micro
