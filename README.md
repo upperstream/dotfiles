@@ -40,6 +40,9 @@ Tools for X Window System to be installed are:
 * [XSel](http://www.kfish.org/software/xsel/) or
   [xclip](https://github.com/astrand/xclip)
 
+Additionally, the script can install [Scala][] development tools
+including [sbt][] and [ENSIME][].
+
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
 distributions:
@@ -48,12 +51,15 @@ distributions:
 * [Debian](https://www.debian.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
+[ENSIME]: http://ensime.github.io/ "Home &middot; ENSIME"
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
+[sbt]: https://www.scala-sbt.org/ "sbt - The interactive build tool"
+[Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
 
 
 ## Create symbolic links to dotfiles

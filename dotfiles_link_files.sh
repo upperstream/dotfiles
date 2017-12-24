@@ -10,11 +10,11 @@
 usage() {
 	cat <<-EOF
 	Usage:
-	$0 [-bnq] [-x patterns] [[src_dir] dest_dir]
+	$0 [-bnq] [-s set] [-x patterns] [[src_dir] dest_dir]
 	$0 -H|--help
 
 	src_dir
-	   : source directory where dot files to be linked are.  \`./home' is
+	   : source directory where `home` directory containing dotfiles to be linked is.  Current directory is
 	     assigned if src_dir is not specified
 	dest_dir
 	   : destination directory where links are created.  \$HOME is assigned
@@ -22,6 +22,9 @@ usage() {
 	-b : create backup files
 	-n : do nothing but just print what is supposed to do
 	-q : quiet mode; print nothing unless \`-n' option is specified
+	-s set
+	   : creatre links to additional file set in the following list:
+	     - scala
 	-x patterns
 	   : exclude list separated by colon (\`:')
 	-H|--help
@@ -56,14 +59,16 @@ excludes=""
 backup_dir=""
 print_only=0
 quiet_mode=0
+sets=""
 
 test "$1" = "--help" && { usage; exit 255; }
 
-while getopts bnqx:H opt; do
+while getopts bnqs:x:H opt; do
 	case $opt in
 	b) backup_dir=.dotfiles.d/backups/`date +%Y%m%dT%H%M%S`;;
 	n) print_only=1;;
 	q) quiet_mode=1;;
+	s) sets=`printf "$sets\n$OPTARG"`;;
 	x) excludes=$OPTARG;;
 	H) usage; exit 255;;
 	esac
@@ -105,11 +110,12 @@ to_exclude() {
 }
 
 link_files() {
-	for f in `find $src_dir \( -name ".[!.]*" -o -name "[!.]*" \) -type f`; do
-		file=`echo $f | cut -f2- -d/`
+	depth=`expr \`echo $1 | sed s:[^/]::g | wc -c\` + 1`
+	for f in `find $1 \( -name ".[!.]*" -o -name "[!.]*" \) -type f`; do
+		file=`echo $f | cut -f$depth- -d/`
 		(echo $file | grep '^\.dotfiles\.d/') && continue
 		to_exclude $f && continue
-		target=$1/$file
+		target=$2/$file
 		if [ -f $target -a ! -h $target ]; then
 			if [ "$backup_dir" ]; then
 				if [ ! -d $backup_dir ]; then
@@ -131,4 +137,13 @@ link_files() {
 	done
 }
 
-link_files $dest_dir
+echo link files from $src_dir to $dest_dir
+
+link_files $src_dir $dest_dir
+for s in $sets; do
+	case $s in
+		scala)
+			link_files $src_dir/../sets/scala $dest_dir
+			;;
+	esac
+done
