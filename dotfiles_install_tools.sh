@@ -550,6 +550,8 @@ determine_operating_system
 determine_sudo_command
 printf "Additional sets to install: $sets\n"
 
+test -d ~/.local/bin || mkdir -p ~/.local/bin
+
 # Micro editor
 has micro || install micro
 
