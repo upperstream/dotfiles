@@ -49,6 +49,7 @@ distributions:
 
 * [CentOS](https://www.centos.org/)
 * [Debian](https://www.debian.org/)
+* [Devuan](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
 [ENSIME]: http://ensime.github.io/ "Home &middot; ENSIME"

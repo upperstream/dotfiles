@@ -54,6 +54,9 @@ determine_operating_system() {
 			*Debian*)
 				distribution="Debian"
 				;;
+			*Devuan*)
+				distribution="Devuan"
+				;;
 			*Ubuntu*)
 				distribution="Ubuntu"
 				;;
@@ -127,7 +130,10 @@ install_package() {
 }
 
 determine_downloader() {
-	for name in fetch ftp curl wget; do
+	test "$os" != "Linux" && for name in fetch ftp; do
+		has $name && { echo $name; return 0; }
+	done
+	for name in curl wget; do
 		has $name && { echo $name; return 0; }
 	done
 	install curl && { echo curl; return 0; }
@@ -160,7 +166,10 @@ install_abduco() {
 			install_package abduco
 			;;
 		Linux)
-			linux_install_package abduco
+			case $distribution in
+				Devuan) linux_install_package dtach;;
+				*)      linux_install_package abduco;;
+			esac
 			;;
 		NetBSD|OpenBSD)
 			install_package dtach
@@ -221,8 +230,12 @@ install_dvtm() {
 					has gcc || linux_install_package gcc
 					install_from_source_dvtm
 					;;
-				Debian|Ubuntu)
+				Debian|Devuan|Ubuntu)
 					linux_install_package dvtm
+					;;
+				*)
+					echo "$0: Error: Unsupported platform: $os" 1>&2
+					return 1
 					;;
 			esac
 			;;
@@ -254,7 +267,7 @@ install_editorconfig() {
 					has gcc || linux_install_package gcc
 					install_from_source_editorconfig
 					;;
-				Debian|Ubuntu)
+				Debian|Devuan|Ubuntu)
 					linux_install_package editorconfig
 					;;
 				*)
@@ -293,6 +306,7 @@ install_emacs() {
 			case $distribution in
 				CentOS) linux_install_package emacs;;
 				Debian) linux_install_package emacs25;;
+				Devuan) linux_install_package emacs;;
 				Ubuntu) linux_install_package emacs24;;
 			esac
 			;;
@@ -323,6 +337,7 @@ install_emacs_nox11() {
 			case $distribution in
 				CentOS) linux_install_package emacs-nox;;
 				Debian) linux_install_package emacs25-nox;;
+				Devuan) linux_install_package emacs-nox;;
 				Ubuntu) linux_install_package emacs24-nox;;
 			esac
 			;;
@@ -394,7 +409,7 @@ install_pip() {
 				CentOS)
 					linux_install_package python2-pip
 					;;
-				Debian|Ubuntu)
+				Debian|Devuan|Ubuntu)
 					install_package python-pip
 					;;
 			esac
@@ -432,7 +447,7 @@ install_sbt() {
 					fi
 					linux_install_package sbt
 					;;
-				Debian|Ubuntu)
+				Debian|Devuan|Ubuntu)
 					linux_install_package apt-transport-https dirmngr
 					if ! grep "^deb https://dl.bintray.com/sbt/debian" /etc/apt/sources.list.d/sbt.list; then
 						echo "deb https://dl.bintray.com/sbt/debian /" | $sudo tee -a /etc/apt/sources.list.d/sbt.list
@@ -485,6 +500,7 @@ install_jdk() {
 			case $distribution in
 				CentOS)        linux_install_package java-1.8.0-openjdk-devel;;
 				Debian|Ubuntu) linux_install_package openjdk-8-jdk-headless;;
+				Devuan)        linux_install_package openjdk-7-jdk;;
 			esac
 			;;
 		NetBSD)
@@ -507,6 +523,7 @@ install_java_source() {
 			case $distribution in
 				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
 				Debian|Ubuntu) linux_install_package openjdk-8-source;;
+				Devuan)        linux_install_package openjdk-7-source;;
 			esac
 			;;
 	esac
