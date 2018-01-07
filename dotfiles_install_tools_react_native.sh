@@ -9,9 +9,9 @@ EOF
 
 install_nodebrew() {
 	case $os in
-		FreeBSD|Linux)
+		FreeBSD|Linux|NetBSD)
 			{ has wget || install wget; } && \
-			wget -O - https://git.io/nodebrew | perl - setup
+			wget -O - --no-check-certificate https://git.io/nodebrew | perl - setup
 			;;
 	esac
 	rc=$?
@@ -21,12 +21,25 @@ install_nodebrew() {
 
 default_node_version=7.10.1
 
-install_node() {
-	node_version=${1:-$default_node_version}
+install_node_dependencies() {
 	case $os in
 		FreeBSD)
 			install_package python27 && \
-			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python && \
+			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
+			;;
+		NetBSD)
+			install_package python27 && \
+			$sudo ln -sf /usr/pkg/bin/python2.7 /usr/pkg/bin/python
+			;;
+	esac
+}
+
+install_node() {
+	node_version=${1:-$default_node_version}
+	install_node_dependencies && \
+	case $os in
+		FreeBSD)
+			install_package gmake libexecinfo && \
 			if [ $prefer_binary_package -eq 1 ]; then
 				install gmake && \
 				install node6 && \
@@ -45,6 +58,17 @@ install_node() {
 		Linux)
 			nodebrew install-binary $node_version && \
 			nodebrew use $node_version
+			;;
+		NetBSD)
+			if [ $prefer_binary_package -eq 1 ]; then
+				install_package nodejs-8.4.0nb1 && \
+				$sudo npm install -g npm@4
+			else
+				{ has cc || download `sed -n 's:^PKG_PATH=\(.*\)/pkgsrc/.*$:\1:p' /etc/pkg_install.conf`/NetBSD/NetBSD-`uname -r`/`uname -m`/binary/sets/comp.tgz | $sudo tar zxpf - -C /; } && \
+				install gmake libexecinfo && \
+				CC=cc CXX=c++ nodebrew install $node_version && \
+				nodebrew use $node_version
+			fi
 			;;
 	esac
 }
@@ -69,12 +93,10 @@ install_watchman_prerequisites() {
 install_watchman() {
 	install_watchman_prerequisites && \
 	case $os in
-		FreeBSD)
+		FreeBSD|NetBSD)
 			install watchman
 			;;
 		Linux)
-			install m4 libtool autoconf pkg-config && \
-			install libssl-dev && \
 			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			./autogen.sh && \
