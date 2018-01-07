@@ -10,9 +10,10 @@ dotfiles_dir=`dirname $0`
 usage() {
 	cat <<-EOF
 	Usage:
-	$0 [-s set] [-x]
+	$0 [-bx] [-s set]
 	$0 -H|--help
 
+	-b : prefer installing binary package over compiling source code
 	-s set
 	   : install specified set of tools; see below list for available sets
 	-x : install additional tools for X Window System; this may install
@@ -31,12 +32,14 @@ EOF
 
 test "$1" = "--help" && { usage; exit 255; }
 
+prefer_binary_package=0
 with_x11=0
 
 sets=""
 
-while getopts s:xH opt; do
+while getopts bs:xH opt; do
 	case $opt in
+		b) prefer_binary_package=1;;
 		s) sets=`printf "$sets\n$OPTARG"`;;
 		x) with_x11=1;;
 		H) usage; exit 255;;
@@ -494,6 +497,9 @@ has() {
 locate_pip
 determine_operating_system
 determine_sudo_command
+if [ $prefer_binary_package -eq 1 ]; then
+	printf "Install binary package rather than compiling source code\n"
+fi
 printf "Additional sets to install: $sets\n"
 
 test -d ~/.local/bin || mkdir -p ~/.local/bin

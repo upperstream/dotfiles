@@ -9,7 +9,7 @@ EOF
 
 install_nodebrew() {
 	case $os in
-		Linux)
+		FreeBSD|Linux)
 			{ has wget || install wget; } && \
 			wget -O - https://git.io/nodebrew | perl - setup
 			;;
@@ -24,11 +24,29 @@ default_node_version=7.10.1
 install_node() {
 	node_version=${1:-$default_node_version}
 	case $os in
+		FreeBSD)
+			install_package python27 && \
+			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python && \
+			if [ $prefer_binary_package -eq 1 ]; then
+				install gmake && \
+				install node6 && \
+				if [ ! -f /usr/ports/Makefile ]; then
+					fetch -o - http://ftp.jaist.ac.jp/pub/FreeBSD/releases/amd64/amd64/11.1-RELEASE/ports.txz | sudo tar zxpf - -C /
+				fi && \
+				(install_package gmake && \
+				cd /usr/ports/www/npm3 && \
+				$sudo make -DBATCH install clean)
+			else
+				install gmake libexecinfo && \
+				CC=cc CXX=c++ nodebrew install $node_version && \
+				nodebrew use $node_version
+			fi
+			;;
 		Linux)
-			nodebrew install-binary $node_version
+			nodebrew install-binary $node_version && \
+			nodebrew use $node_version
 			;;
 	esac
-	nodebrew use $node_version
 }
 
 install_watchman_prerequisites() {
@@ -51,7 +69,12 @@ install_watchman_prerequisites() {
 install_watchman() {
 	install_watchman_prerequisites && \
 	case $os in
+		FreeBSD)
+			install watchman
+			;;
 		Linux)
+			install m4 libtool autoconf pkg-config && \
+			install libssl-dev && \
 			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			./autogen.sh && \
@@ -94,14 +117,19 @@ install_xde() {
 			fi && \
 			mv /tmp/xde-*.AppImage $HOME/.local/bin/ && chmod +x $HOME/.local/bin/xde-*.AppImage
 			;;
+		*)
+			echo "Error: $0: XDE does not support $os.  This error is not fatal." 1>&2
+			;;
 	esac
 }
 
 install_tools_react_native() {
-	has nodebrew || install_nodebrew
+	acquire_root_privilege=""
+	test $prefer_binary_package -eq 1 && acquire_root_privilege=$sudo
+	test $prefer_binary_package -eq 0 && { has nodebrew || install_nodebrew; }
 	has node || install_node
-	has create-react-native-app || npm install -g create-react-native-app
-	has exp || npm install -g exp
+	has create-react-native-app || $acquire_root_privilege npm install -g create-react-native-app
+	has exp || $acquire_root_privilege npm install -g exp
 	has watchman || install_watchman
 	if [ $with_x11 -eq 1 ]; then
 		test -f `echo $HOME/.local/bin/xde-*-x86_64.AppImage | cut -f1 -d' '` || install_xde
