@@ -40,8 +40,12 @@ Tools for X Window System to be installed are:
 * [XSel](http://www.kfish.org/software/xsel/) or
   [xclip](https://github.com/astrand/xclip)
 
-Additionally, the script can install [Scala][] development tools
-including [sbt][] and [ENSIME][].
+Additionally, the script can install the following sets of development
+tools with `-s` option:
+
+* scala - [Scala][] development tools including [sbt][] and [ENSIME][]
+* react_native - [React Native] development tools including
+  [create-react-native-app][], [exp][], [Watchman][], and [XDE][]
 
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
@@ -52,15 +56,25 @@ distributions:
 * [Devuan](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
+[create-react-native-app]: https://github.com/react-community/create-react-native-app
+    "react-community/create-react-native-app: Create a React Native app on any OS with no build config."
 [ENSIME]: http://ensime.github.io/ "Home &middot; ENSIME"
+[exp]: https://github.com/expo/exp
+    "expo/exp: The Exponent Development CLI"
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
+[React Native]: https://facebook.github.io/react-native/
+    "React Native &middot; A framework for building native apps using React"
 [sbt]: https://www.scala-sbt.org/ "sbt - The interactive build tool"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
+[Watchman]: https://facebook.github.io/watchman/
+    "Watchman A file watching service | Watchman"
+[XDE]: https://github.com/expo/xde
+    "expo/xde: The Expo Development Environment"
 
 
 ## Create symbolic links to dotfiles
@@ -74,6 +88,11 @@ Add `-b` option to back up files to be replaced.  Backup files will be
 created in your `~/.dotfiles.d/backups/YYYYmmdd'T'HHMMSS` directory.
 Run the script with `-n` option does nothing but merely prints what
 will be done.
+
+This script supports `-s` option to set up symbolic links for
+additional set of tools.  See the above description above for
+`dotfiles_install_tools.sh` for details.
+
 Execute `./dotfiles_link_files -H` to learn more options.
 
 
@@ -87,4 +106,4 @@ See [LICENSE.txt](LICENSE.txt) file for details.
 
 - - -
 
-Copyright &copy; 2017 Upperstream Software.
+Copyright &copy; 2017, 2018 Upperstream Software.

@@ -23,13 +23,19 @@ usage() {
 	-n : do nothing but just print what is supposed to do
 	-q : quiet mode; print nothing unless \`-n' option is specified
 	-s set
-	   : creatre links to additional file set in the following list:
-	     - scala
+	   : install specified set of tools; see below list for available sets
 	-x patterns
 	   : exclude list separated by colon (\`:')
 	-H|--help
 	   : print this help summary and exit
+
+	Available sets are:
+
 EOF
+
+	for s in dotfiles_install_tools_*.sh; do
+		. ./$s && `echo $s | sed s/dotfiles_install_tools_\\\\\([^.]*\\\\\).sh/\\\\1/`_describe_module
+	done
 }
 
 log() {
@@ -141,9 +147,7 @@ echo link files from $src_dir to $dest_dir
 
 link_files $src_dir $dest_dir
 for s in $sets; do
-	case $s in
-		scala)
-			link_files $src_dir/../sets/scala $dest_dir
-			;;
-	esac
+	if [ -d $src_dir/../sets/$s ]; then
+		link_files $src_dir/../sets/$s $dest_dir
+	fi
 done
