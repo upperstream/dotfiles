@@ -31,6 +31,10 @@ install_node_dependencies() {
 			install_package python27 && \
 			$sudo ln -sf /usr/pkg/bin/python2.7 /usr/pkg/bin/python
 			;;
+		OpenBSD)
+			install_package python-2.7.14 && \
+			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
+			;;
 	esac
 }
 
@@ -70,6 +74,26 @@ install_node() {
 				nodebrew use $node_version
 			fi
 			;;
+		OpenBSD)
+			if [ $prefer_binary_package -eq 1 ]; then
+				install_package node
+			else
+				{ has gmake || install_package gmake; } && \
+				install_package libexecinfo && \
+				CC=cc CXX=c++ MAKE=gmake nodebrew install $node_version
+			fi
+			;;
+	esac
+}
+
+install_exp() {
+	case $os in
+		OpenBSD)
+			echo "Error: $0: exp does not support $os.  This error is not fatal." 1>&2
+			;;
+		*)
+			$acquire_root_privilege npm install -g exp
+			;;
 	esac
 }
 
@@ -87,6 +111,20 @@ install_watchman_prerequisites() {
 					;;
 			esac
 			;;
+		OpenBSD)
+			install_package autoconf-2.69p2 automake-1.15.1 m4 gmake bash
+			;;
+	esac
+}
+
+autogen_watchman() {
+	case $os in
+		Linux)
+			./autogen.sh
+			;;
+		OpenBSD)
+			AUTOCONF_VERSION=2.69 AUTOMAKE_VERSION=1.15 M4=gm4 bash ./autogen.sh
+			;;
 	esac
 }
 
@@ -96,10 +134,10 @@ install_watchman() {
 		FreeBSD|NetBSD)
 			install watchman
 			;;
-		Linux)
+		Linux|OpenBSD)
 			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
-			./autogen.sh && \
+			autogen_watchman && \
 			./configure --without-python --without-pcre && \
 			make && $sudo make install) && \
 			rm -rf /tmp/watchman-*
@@ -126,6 +164,33 @@ install_xde_prerequisites() {
 					;;
 			esac
 			;;
+		OpenBSD)
+			echo "Error: $0: watchman does not support $os.  This error is not fatal." 1>&2
+			return 1
+			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			(cd /tmp/watchman-* && \
+			if [ ! -f .dotfiles.patched ]; then
+				patch -p1 <<-EOF
+					diff -u watchman-4.9.0_orig/log.cpp watchman-4.9.0/log.cpp
+					--- watchman-4.9.0_orig/log.cpp	Sun Jan  7 20:08:18 2018
+					+++ watchman-4.9.0/log.cpp	Sun Jan  7 20:03:51 2018
+					@@ -17,7 +17,9 @@
+					 #else
+					 static thread_local std::string thread_name_str;
+					 #endif
+					+#if (defined(HAVE_BACKTRACE) && defined(HAVE_BACKTRACE_SYMBOLS)) || defined(_WIN32)
+					 static constexpr size_t kMaxFrames = 64;
+					+#endif
+					 
+					 namespace {
+					 template <typename String>
+EOF
+				test $? -eq 0 && touch .dotfiles.patched
+			fi && \
+			autogen_watchman && \
+			CC=cc CXX=c++ CPPFLAGS='-Dva_list=__va_list' ./configure --without-python --without-pcre && \
+			AUTOCONF_VERSION=2.69 AUTOMAKE_VERSION=1.15 gmake && $sudo gmake install) && \
+			rm -rf /tmp/watchman-*
 	esac
 }
 
@@ -151,7 +216,7 @@ install_tools_react_native() {
 	test $prefer_binary_package -eq 0 && { has nodebrew || install_nodebrew; }
 	has node || install_node
 	has create-react-native-app || $acquire_root_privilege npm install -g create-react-native-app
-	has exp || $acquire_root_privilege npm install -g exp
+	has exp || install_exp
 	has watchman || install_watchman
 	if [ $with_x11 -eq 1 ]; then
 		test -f `echo $HOME/.local/bin/xde-*-x86_64.AppImage | cut -f1 -d' '` || install_xde
