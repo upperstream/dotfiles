@@ -31,11 +31,23 @@ install_node() {
 	nodebrew use $node_version
 }
 
-install_watchman() {
+install_watchman_prerequisites() {
 	case $os in
 		Linux)
-			install m4 libtool autoconf pkg-config && \
-			install libssl-dev && \
+			case $distribution in
+				Debian|Devuan|Ubuntu)
+					install m4 libtool autoconf pkg-config && \
+					install libssl-dev
+					;;
+			esac
+			;;
+	esac
+}
+
+install_watchman() {
+	install_watchman_prerequisites && \
+	case $os in
+		Linux)
 			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			./autogen.sh && \
@@ -50,7 +62,7 @@ install_xde_prerequisites() {
 	case $os in
 		Linux)
 			case $distribution in
-				Debian)
+				Debian|Devuan|Ubuntu)
 					install fuse && \
 					$sudo modprobe fuse && \
 					{ grep fuse /etc/group > /dev/null || $sudo groupadd fuse; } && \
