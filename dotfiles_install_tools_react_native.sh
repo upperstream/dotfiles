@@ -35,6 +35,10 @@ install_watchman_prerequisites() {
 	case $os in
 		Linux)
 			case $distribution in
+				CentOS)
+					install m4 libtool autoconf pkgconfig gcc-c++ && \
+					install openssl-devel
+					;;
 				Debian|Devuan|Ubuntu)
 					install m4 libtool autoconf pkg-config && \
 					install libssl-dev
@@ -62,6 +66,12 @@ install_xde_prerequisites() {
 	case $os in
 		Linux)
 			case $distribution in
+				CentOS)
+					install_package --enablerepo=epel fuse-sshfs && \
+					{ grep fuse /etc/group > /dev/null || $sudo groupadd fuse; } && \
+					$sudo usermod -a -G fuse `whoami` && \
+					install gtk2 xdg-utils zenity
+					;;
 				Debian|Devuan|Ubuntu)
 					install fuse && \
 					$sudo modprobe fuse && \
@@ -78,8 +88,11 @@ install_xde() {
 	install_xde_prerequisites && \
 	case $os in
 		Linux)
-			{ has wget || install wget; } && \
-			(cd $HOME/.local/bin; wget https://github.com/expo/xde/releases/download/v2.22.1/xde-2.22.1-x86_64.AppImage) && chmod +x $HOME/.local/bin/xde-*.AppImage
+			if [ ! -f `echo /tmp/xde-*.AppImage | cut -f1 -d' '` ]; then
+				{ has wget || install wget; } && \
+				(cd /tmp; wget https://github.com/expo/xde/releases/download/v2.22.1/xde-2.22.1-x86_64.AppImage)
+			fi && \
+			mv /tmp/xde-*.AppImage $HOME/.local/bin/ && chmod +x $HOME/.local/bin/xde-*.AppImage
 			;;
 	esac
 }
