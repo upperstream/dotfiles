@@ -19,3 +19,6 @@ esac
 
 PAGER=more
 export PAGER
+
+GIT_PAGER="less -X"
+export GIT_PAGER
