@@ -556,6 +556,7 @@ install() {
 		rc=$?
 		test $rc -ne 0 && return $rc
 	done
+	return 0
 }
 
 has() {
