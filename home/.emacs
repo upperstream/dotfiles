@@ -1,14 +1,16 @@
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
-       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
-  (add-to-list 'package-archives
-               '("melpa-stable" . "https://stable.melpa.org/packages/") t))
+       (proto (if no-ssl "http" "https")))
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
 (when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+  (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/"))))
+package-archive-priorities '(("melpa-stable" . 1)))
+
 (package-initialize)
 
-(when (not package-archive-contents)
+(when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
@@ -18,10 +20,12 @@
   :config
   (editorconfig-mode 1))
 
-(add-to-list 'exec-path "/usr/bin")
-(add-to-list 'exec-path "/usr/pkg/bin")
-(add-to-list 'exec-path "/usr/local/bin")
-(add-to-list 'exec-path "~/.local/bin")
+(use-package exec-path-from-shell
+  :ensure t
+  :pin melpa-stable)
+
+(setq exec-path-from-shell-arguments '("-i"))
+(exec-path-from-shell-initialize)
 
 (defun load-directory (dir)
       (let ((load-it (lambda (f)
@@ -29,3 +33,19 @@
 		     ))
 	(mapc load-it (directory-files dir nil "\\.el$"))))
     (load-directory "~/.emacs.d/init.d/")
+
+(setq load-path (cons "~/.emacs.d/lisp" load-path))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ensime exec-path-from-shell editorconfig use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
