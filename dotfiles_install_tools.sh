@@ -586,7 +586,7 @@ has nano || install nano
 has lynx || install lynx
 
 # dirstack
-has pushd || install dirstack
+has dirstack.sh || install dirstack
 
 # cdiff
 has cdiff || install cdiff
