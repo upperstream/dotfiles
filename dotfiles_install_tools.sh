@@ -130,7 +130,7 @@ install_package() {
 }
 
 determine_downloader() {
-	test "$os" != "Linux" && for name in fetch ftp; do
+	test "$os" != "Linux" -a "$os" != "Darwin" && for name in fetch ftp; do
 		has $name && { echo $name; return 0; }
 	done
 	for name in curl wget; do
