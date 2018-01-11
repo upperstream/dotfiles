@@ -145,6 +145,94 @@ install_watchman() {
 	esac
 }
 
+install_exctags() {
+	case $os in
+		Linux)
+			case $distribution in
+				CentOS)
+					install_package ctags-etags
+					;;
+				Debian|Devuan|Ubuntu)
+					install_package exuberant-ctags
+					;;
+				*)
+					install_package ctags
+					;;
+			esac
+			;;
+		NetBSD)
+			install_package exctags
+			;;
+		OpenBSD)
+			install_package ectags
+			;;
+		*)
+			install_package ctags
+			;;
+	esac
+}
+
+has_exctags() {
+	case $os in
+		FreeBSD|NetBSD)
+			has exctags
+			;;
+		Linux)
+			case $distribution in
+				CentOS)
+					has etags.ctags
+					;;
+				Debian|Devuan|Ubuntu)
+					has ctags-exuberant
+					;;
+				*)
+					has ctags
+					;;
+			esac
+			;;
+		OpenBSD)
+			has ectags
+			;;
+		*)
+            has ctags
+			;;
+	esac
+}
+
+install_from_source_global() {
+	compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | sed 's/^\([0-9]*\)\.\([0-9]*\)$/\1\2/'`.tgz
+	download $compiler_url | $sudo tar -zxpf - -C /
+	download http://tamacom.com/global/global-6.6.1.tar.gz | tar -zxf - -C /
+	(cd /tmp/global-*; \
+	./configure --prefix=$HOME/.local --with-exuberant-ctags=`command -v ectags` && \
+	make && $sudo make install) && \
+	rm -rf /tmp/global-*
+}
+
+install_global() {
+	case $os in
+		Darwin)
+			install_package global --with-exuberant-ctags --with-pygments
+			;;
+		Linux)
+			case $distribution in
+				CentOS)
+					install_package global-ctags
+					;;
+				*)
+					install_package global
+					;;
+			esac
+			;;
+		OpenBSD)
+			install_from_source_global
+			;;
+		*)
+			install_package global
+			;;
+	esac
+}
+
 install_xde_prerequisites() {
 	case $os in
 		Linux)
@@ -218,6 +306,9 @@ install_tools_react_native() {
 	has create-react-native-app || $acquire_root_privilege npm install -g create-react-native-app
 	has exp || install_exp
 	has watchman || install_watchman
+	has tern || $acquire_root_privilege npm install -g tern
+	has_exctags || install_exctags
+	has global || install_global
 	if [ $with_x11 -eq 1 ]; then
 		test -f `echo $HOME/.local/bin/xde-*-x86_64.AppImage | cut -f1 -d' '` || install_xde
 	fi
