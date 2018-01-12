@@ -41,11 +41,12 @@ Tools for X Window System to be installed are:
   [xclip](https://github.com/astrand/xclip)
 
 Additionally, the script can install the following sets of development
-tools with `-s` option:
+tools with a leading `-s` option:
 
-* scala - [Scala][] development tools including [sbt][] and [ENSIME][]
-* react_native - [React Native] development tools including
-  [create-react-native-app][], [exp][], [Watchman][], and [XDE][]
+* [`react_native`](Readme_react_native.md) - development environment
+  with [React Native][] tools
+* [`scala`](Readme_scala.md) - development environment with [Scala][]
+  tools
 
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
@@ -56,11 +57,6 @@ distributions:
 * [Devuan](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
-[create-react-native-app]: https://github.com/react-community/create-react-native-app
-    "react-community/create-react-native-app: Create a React Native app on any OS with no build config."
-[ENSIME]: http://ensime.github.io/ "Home &middot; ENSIME"
-[exp]: https://github.com/expo/exp
-    "expo/exp: The Exponent Development CLI"
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
@@ -69,12 +65,7 @@ distributions:
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
 [React Native]: https://facebook.github.io/react-native/
     "React Native &middot; A framework for building native apps using React"
-[sbt]: https://www.scala-sbt.org/ "sbt - The interactive build tool"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
-[Watchman]: https://facebook.github.io/watchman/
-    "Watchman A file watching service | Watchman"
-[XDE]: https://github.com/expo/xde
-    "expo/xde: The Expo Development Environment"
 
 
 ## Create symbolic links to dotfiles
