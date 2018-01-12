@@ -2,6 +2,9 @@
 
 test -f $HOME/.environment && . $HOME/.environment
 test -f $HOME/.environment.`hostname` && . $HOME/.environment.`hostname`
+for f in $HOME/.environment_*; do
+	test -f $f && . $f
+done
 
 if [ `uname` = FreeBSD ]; then
 	test -x /usr/bin/fortune && /usr/bin/fortune freebsd-tips

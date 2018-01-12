@@ -5,30 +5,41 @@
 
 #set -x
 
+dotfiles_dir=`dirname $0`
+
 usage() {
 	cat <<-EOF
 	Usage:
-	$0 [-s set] [-x]
+	$0 [-bx] [-s set]
 	$0 -H|--help
 
+	-b : prefer installing binary package over compiling source code
 	-s set
-	   : install specified set in the following list:
-             - scala
+	   : install specified set of tools; see below list for available sets
 	-x : install additional tools for X Window System; this may install
 	     X Window System as a part of dependencies
 	-H|--help
 	   : print this help summary and exit
+
+	Available sets are:
+
 EOF
+
+	for s in dotfiles_install_tools_*.sh; do
+		. ./$s && `echo $s | sed s/dotfiles_install_tools_\\\\\([^.]*\\\\\).sh/\\\\1/`_describe_module
+	done
 }
 
 test "$1" = "--help" && { usage; exit 255; }
 
+prefer_binary_package=0
 with_x11=0
 
 sets=""
 
-while getopts s:xH opt; do
+while getopts bs:xH opt; do
 	case $opt in
+		b) prefer_binary_package=1;;
 		s) sets=`printf "$sets\n$OPTARG"`;;
 		x) with_x11=1;;
 		H) usage; exit 255;;
@@ -430,43 +441,6 @@ install_pip() {
 	return $?
 }
 
-install_sbt() {
-	has bash || install bash
-	case $os in
-		Darwin)
-			install_package sbt@1
-			;;
-		FreeBSD)
-			install_package sbt
-			;;
-		Linux)
-			case $distribution in
-				CentOS)
-					if ! grep "name=bintray--sbt-rpm" /etc/yum.repos.d/bintray-sbt-rpm.repo; then
-						download https://bintray.com/sbt/rpm/rpm | $sudo tee -a /etc/yum.repos.d/bintray-sbt-rpm.repo
-					fi
-					linux_install_package sbt
-					;;
-				Debian|Devuan|Ubuntu)
-					linux_install_package apt-transport-https dirmngr
-					if ! grep "^deb https://dl.bintray.com/sbt/debian" /etc/apt/sources.list.d/sbt.list; then
-						echo "deb https://dl.bintray.com/sbt/debian /" | $sudo tee -a /etc/apt/sources.list.d/sbt.list
-						$sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-						$sudo apt-get update
-					fi
-					linux_install_package sbt
-				;;
-			esac
-			;;
-		NetBSD|OpenBSD)
-			if ! has sbt; then
-				download https://github.com/sbt/sbt/releases/download/v1.0.4/sbt-1.0.4.tgz | tar -zxf - -C ~/.local && \
-				(cd ~/.local/bin; ln -sf ../sbt/bin/* .)
-			fi
-			;;
-	esac
-}
-
 install_xsel() {
 	case $os in
 		Darwin)
@@ -489,49 +463,6 @@ install_xsel() {
 			return 1
 			;;
 	esac
-}
-
-install_jdk() {
-	case $os in
-		FreeBSD)
-			install_package openjdk8
-			;;
-		Linux)
-			case $distribution in
-				CentOS)        linux_install_package java-1.8.0-openjdk-devel;;
-				Debian|Ubuntu) linux_install_package openjdk-8-jdk-headless;;
-				Devuan)        linux_install_package openjdk-7-jdk;;
-			esac
-			;;
-		NetBSD)
-			install_package openjdk8 && \
-			(cd ~/.local/bin; ln -sf /usr/pkg/java/openjdk8/bin/* .)
-			;;
-		OpenBSD)
-			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
-			fi
-			install_package jdk && \
-			(cd ~/.local/bin; ln -sf /usr/local/jdk-1.8.0/bin/* .)
-			;;
-	esac
-}
-
-install_java_source() {
-	case $os in
-		Linux)
-			case $distribution in
-				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
-				Debian|Ubuntu) linux_install_package openjdk-8-source;;
-				Devuan)        linux_install_package openjdk-7-source;;
-			esac
-			;;
-	esac
-}
-
-install_scala_tools() {
-	install jdk java-source sbt
-#	install scala scala-doc scala-mode-el
 }
 
 install() {
@@ -566,6 +497,9 @@ has() {
 locate_pip
 determine_operating_system
 determine_sudo_command
+if [ $prefer_binary_package -eq 1 ]; then
+	printf "Install binary package rather than compiling source code\n"
+fi
 printf "Additional sets to install: $sets\n"
 
 test -d ~/.local/bin || mkdir -p ~/.local/bin
@@ -604,11 +538,11 @@ has mg || install mg
 test $with_x11 -eq 0 && install emacs-nox11
 
 for s in `echo $sets`; do
-	case $s in
-		scala)
-			install_scala_tools
-			;;
-	esac
+	if [ -f $dotfiles_dir/dotfiles_install_tools_$s.sh ]; then
+		. $dotfiles_dir/dotfiles_install_tools_$s.sh && install_tools_$s
+	else
+		echo "Error: $0: $dotfiles_dir/dotfiles_install_tools_$s.sh not found" 1>&2
+	fi
 done
 
 test $with_x11 -eq 1 || exit
