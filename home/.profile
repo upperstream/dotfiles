@@ -21,6 +21,10 @@ case "$0" in
 		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
 		ENV=$HOME/.shrc
 		;;
+	-ash)
+		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
+		ENV=$HOME/.shrc
+		;;
 	-dash)
 		test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
 		ENV=$HOME/.shrc

@@ -59,6 +59,9 @@ determine_operating_system() {
 	if [ "$os" = "Linux" ]; then
 		name=`cat /etc/*release | grep -F "NAME="`
 		case $name in
+			*Alpine*)
+				distribution="Alpine"
+				;;
 			*CentOS*)
 				distribution="CentOS"
 				;;
@@ -84,7 +87,7 @@ determine_operating_system() {
 pkgmgr=""
 
 determine_package_manager() {
-	for name in apt-get yum; do
+	for name in apk apt-get yum; do
 		has $name && { echo $name; return 0; }
 	done
 	return 1
@@ -102,9 +105,26 @@ determine_sudo_command() {
 	return 1
 }
 
+alpine_enable_community_repo() {
+	if grep "^#.*/v[0-9]*\.[0-9]*/community$" /etc/apk/repositories > /dev/null; then
+		$sudo sh -c "(rm /etc/apk/repositories; sed 's=^#\\(.*/v[0-9]*\.[0-9]*/community\\)\$=\\1=' > /etc/apk/repositories) < /etc/apk/repositories" && \
+		$sudo apk update
+	fi
+}
+
+alpine_enable_edge_repos() {
+	if grep "^#.*/edge/.*$" /etc/apk/repositories > /dev/null; then
+		$sudo sh -c "(rm /etc/apk/repositories; sed 's=^#\\(.*/edge/.*\\)\$=\\1=' > /etc/apk/repositories) < /etc/apk/repositories" && \
+		$sudo apk update
+	fi
+}
+
 linux_install_package() {
 	test -z "$pkgmgr" && { pkgmgr=`determine_package_manager` || return 1; }
 	case $pkgmgr in
+		apk)
+			$sudo apk add $@
+			;;
 		apt-get)
 			$sudo apt-get install -y $@
 			;;
@@ -178,6 +198,7 @@ install_abduco() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine) alpine_enable_edge_repos && linux_install_package abduco;;
 				Devuan) linux_install_package dtach;;
 				*)      linux_install_package abduco;;
 			esac
@@ -206,6 +227,9 @@ install_cdiff() {
 }
 
 install_dirstack() {
+	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+		install_package make
+	fi && \
 	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz | tar -zxf - -C /tmp || return 1
 	(cd /tmp/upperstream-dirstack-* && \
 	printf "s/^M/# M/\n/# .*$os/ {N; s/\\\n# /\\\\\n/; }\ns:^PREFIX = /usr/local:PREFIX = \${HOME}/.local:" > config.sed && \
@@ -236,6 +260,10 @@ install_dvtm() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine)
+					alpine_enable_community_repo && \
+					linux_install_package dvtm
+					;;
 				CentOS)
 					linux_install_package ncurses-devel
 					has gcc || linux_install_package gcc
@@ -245,13 +273,14 @@ install_dvtm() {
 					linux_install_package dvtm
 					;;
 				*)
-					echo "$0: Error: Unsupported platform: $os" 1>&2
+					echo "$0: Error: Unsupported platform: $distribution" 1>&2
 					return 1
 					;;
 			esac
 			;;
 		*)
-			install_from_source_dvtm
+			echo "$0: Error: Unsupported platform: $os" 1>&2
+			return 1
 			;;
 	esac
 }
@@ -271,18 +300,22 @@ install_editorconfig() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine)
+					alpine_enable_community_repo && \
+					linux_install_package editorconfig
+					;;
 				CentOS)
 					for t in cmake pcre-devel; do
 						linux_install_package $t
 					done
-					has gcc || linux_install_package gcc
+					has gcc || install gcc
 					install_from_source_editorconfig
 					;;
 				Debian|Devuan|Ubuntu)
 					linux_install_package editorconfig
 					;;
 				*)
-					echo "$0: Error: Unsupported platform: $os" 1>&2
+					echo "$0: Error: Unsupported platform: $distribution" 1>&2
 					return 1
 					;;
 			esac
@@ -315,6 +348,7 @@ install_emacs() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
 				CentOS) linux_install_package emacs;;
 				Debian) linux_install_package emacs25;;
 				Devuan) linux_install_package emacs;;
@@ -346,6 +380,7 @@ install_emacs_nox11() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
 				CentOS) linux_install_package emacs-nox;;
 				Debian) linux_install_package emacs25-nox;;
 				Devuan) linux_install_package emacs-nox;;
@@ -373,6 +408,7 @@ install_markdown() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine) alpine_enable_community_repo && install_package markdown;;
 				CentOS) linux_install_package perl-Text-Markdown;;
 				*)      linux_install_package markdown;;
 			esac
@@ -383,20 +419,32 @@ install_markdown() {
 	esac
 }
 
+install_stow() {
+	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+		alpine_enable_community_repo
+	fi && \
+	install_package stow
+}
+
 __install_micro() {
-	case $1 in
-		linux64|netbsd64)
-			{ has stow || install_package stow; } && \
-			{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
-			download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz | tar zxf - -C $HOME/.local/stow && \
-			{ mkdir -p $HOME/.local/stow/micro-1.3.4/bin && mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
-			(cd $HOME/.local/stow && stow micro-1.3.4)
-			;;
-		*)
-			echo "$0: Error: Unsupported platform: `uname`" 1>&2
-			return 1
-			;;
-	esac
+	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+		alpine_enable_edge_repos && \
+		linux_install_package micro
+	else
+		case $1 in
+			linux64|netbsd64)
+				{ has stow || install_stow; } && \
+				{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
+				download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz | tar -zxf - -C $HOME/.local/stow && \
+				{ mkdir -p $HOME/.local/stow/micro-1.3.4/bin && mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
+				(cd $HOME/.local/stow && stow micro-1.3.4)
+				;;
+			*)
+				echo "$0: Error: Unsupported platform: `uname`" 1>&2
+				return 1
+				;;
+		esac
+	fi
 }
 
 install_micro() {
@@ -417,6 +465,9 @@ install_pip() {
 	case $os in
 		Linux)
 			case $distribution in
+				Alpine)
+					linux_install_package py2-pip
+					;;
 				CentOS)
 					linux_install_package python2-pip
 					;;
@@ -450,7 +501,10 @@ install_xsel() {
 			install_package xsel
 			;;
 		Linux)
-			install_package xsel
+			case $distribution in
+				Alpine) install_package xclip;;
+				*)      install_package xsel;;
+			esac
 			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then

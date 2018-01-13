@@ -1,12 +1,16 @@
 test -f /etc/shrc && . /etc/shrc
-hostname=$(hostname | sed 's/\..*//')
+hostname=`hostname | sed 's/\..*//'`
 if [ -z "$hostname" ]; then
-	PS1="$(logname)"
+	PS1="`id -un`"
 else
-	PS1="$(logname)@$hostname"
+	PS1="`id -un`@$hostname"
 fi
 case $(id -u) in
 	0) PS1="${PS1}# ";;
 	*) PS1="${PS1}$ ";;
 esac
-set -o emacs
+if set -o | grep -F emacs > /dev/null; then
+	set -o emacs
+elif set -o | grep -F vi > /dev/null; then
+	set -o vi
+fi

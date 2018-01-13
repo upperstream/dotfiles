@@ -52,6 +52,7 @@ At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
 distributions:
 
+* [Alpine Linux](https://alpinelinux.org/)
 * [CentOS](https://www.centos.org/)
 * [Debian](https://www.debian.org/)
 * [Devuan GNU+Linux](https://devuan.org/)

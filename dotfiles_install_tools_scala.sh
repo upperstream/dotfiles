@@ -18,6 +18,10 @@ install_sbt() {
 			;;
 		Linux)
 			case $distribution in
+				Alpine)
+					alpine_enable_edge_repos && \
+					linux_install_package sbt
+					;;
 				CentOS)
 					if ! grep "name=bintray--sbt-rpm" /etc/yum.repos.d/bintray-sbt-rpm.repo; then
 						download https://bintray.com/sbt/rpm/rpm | $sudo tee -a /etc/yum.repos.d/bintray-sbt-rpm.repo
@@ -51,9 +55,20 @@ install_jdk() {
 			;;
 		Linux)
 			case $distribution in
-				CentOS)        linux_install_package java-1.8.0-openjdk-devel;;
-				Debian|Ubuntu) linux_install_package openjdk-8-jdk-headless;;
-				Devuan)        linux_install_package openjdk-7-jdk;;
+				Alpine)
+					alpine_enable_community_repo && \
+					linux_install_package openjdk8 && \
+					(cd /usr/bin && $sudo ln -sf /usr/lib/jvm/default-jvm/bin/* .)
+					;;
+				CentOS)
+					linux_install_package java-1.8.0-openjdk-devel
+					;;
+				Debian|Ubuntu)
+					linux_install_package openjdk-8-jdk-headless
+					;;
+				Devuan)
+					linux_install_package openjdk-7-jdk
+					;;
 			esac
 			;;
 		NetBSD)
