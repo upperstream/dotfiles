@@ -54,8 +54,9 @@ distributions:
 
 * [CentOS](https://www.centos.org/)
 * [Debian](https://www.debian.org/)
-* [Devuan](https://devuan.org/)
+* [Devuan GNU+Linux](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
+
 
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
@@ -77,8 +78,8 @@ These links point to files in `home` directory.
 
 Add `-b` option to back up files to be replaced.  Backup files will be
 created in your `~/.dotfiles.d/backups/YYYYmmdd'T'HHMMSS` directory.
-Run the script with `-n` option does nothing but merely prints what
-will be done.
+Executing the script with `-n` option does nothing but merely prints
+what will be done.
 
 This script supports `-s` option to set up symbolic links for
 additional set of tools.  See the above description above for
