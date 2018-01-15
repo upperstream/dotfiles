@@ -9,7 +9,7 @@ EOF
 
 install_nodebrew() {
 	case $os in
-		FreeBSD|Linux|NetBSD)
+		FreeBSD|Linux|Darwin|NetBSD)
 			{ has wget || install wget; } && \
 			wget -O - --no-check-certificate https://git.io/nodebrew | perl - setup
 			;;
@@ -42,6 +42,10 @@ install_node() {
 	node_version=${1:-$default_node_version}
 	install_node_dependencies && \
 	case $os in
+		Darwin)
+			nodebrew install-binary $node_version && \
+			nodebrew use $node_version
+			;;
 		FreeBSD)
 			install_package gmake libexecinfo && \
 			if [ $prefer_binary_package -eq 1 ]; then
@@ -131,7 +135,7 @@ autogen_watchman() {
 install_watchman() {
 	install_watchman_prerequisites && \
 	case $os in
-		FreeBSD|NetBSD)
+		Darwin|FreeBSD|NetBSD)
 			install watchman
 			;;
 		Linux|OpenBSD)
@@ -147,6 +151,10 @@ install_watchman() {
 
 install_exctags() {
 	case $os in
+		Darwin)
+			install_package ctags && \
+			brew link --overwrite ctags
+			;;
 		Linux)
 			case $distribution in
 				CentOS)
@@ -174,6 +182,9 @@ install_exctags() {
 
 has_exctags() {
 	case $os in
+		Darwin)
+			ctags --version | grep -F 'Exuberant Ctags' > /dev/null 2>&1
+			;;
 		FreeBSD|NetBSD)
 			has exctags
 			;;
@@ -285,6 +296,9 @@ EOF
 install_xde() {
 	install_xde_prerequisites && \
 	case $os in
+		Darwin)
+			install_package -c expo-xde
+			;;
 		Linux)
 			if [ ! -f `echo /tmp/xde-*.AppImage | cut -f1 -d' '` ]; then
 				{ has wget || install wget; } && \
@@ -301,7 +315,7 @@ install_xde() {
 install_tools_react_native() {
 	acquire_root_privilege=""
 	test $prefer_binary_package -eq 1 && acquire_root_privilege=$sudo
-	test $prefer_binary_package -eq 0 && { has nodebrew || install_nodebrew; }
+	has nodebrew || install_nodebrew;
 	has node || install_node
 	has create-react-native-app || $acquire_root_privilege npm install -g create-react-native-app
 	has exp || install_exp
