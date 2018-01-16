@@ -13,6 +13,9 @@ go_install_package() {
 
 install_golang() {
 	case "$os" in
+		FreeBSD)
+			install_package go
+			;;
 		Linux)
 			case $distribution in
 				Alpine)
