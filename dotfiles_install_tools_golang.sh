@@ -26,6 +26,15 @@ install_golang() {
 					;;
 			esac
 			;;
+		NetBSD)
+			if [ ! -x /usr/pkg/sbin/mozilla-rootcerts ]; then
+				install_package mozilla-rootcerts
+			fi && \
+			if [ ! -f `echo /etc/openssl/certs/mozilla-rootcert-* | cut -f1 -d' '` ]; then
+				$sudo /usr/pkg/sbin/mozilla-rootcerts install
+			fi && \
+			install_package go
+			;;
 		*)
 			install_package golang
 			;;
