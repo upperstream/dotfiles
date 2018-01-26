@@ -35,6 +35,9 @@ install_golang() {
 			fi && \
 			install_package go
 			;;
+		OpenBSD)
+			install_package go
+			;;
 		*)
 			install_package golang
 			;;
