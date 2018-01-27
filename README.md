@@ -43,6 +43,8 @@ Tools for X Window System to be installed are:
 Additionally, the script can install the following sets of development
 tools with a leading `-s` option:
 
+* [`golang`](Readme_golang.md) - development environment with [Golang][]
+  tools
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
 * [`scala`](Readme_scala.md) - development environment with [Scala][]
@@ -60,6 +62,7 @@ distributions:
 
 
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
+[Golang]: https://golang.org/ "The Go Programming Language"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
