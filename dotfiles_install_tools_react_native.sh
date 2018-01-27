@@ -9,7 +9,7 @@ EOF
 
 install_nodebrew() {
 	case "$os" in
-		FreeBSD|Linux|Darwin|NetBSD)
+		FreeBSD|Linux|Darwin|NetBSD|OpenBSD)
 			{ has wget || install wget; } && \
 			wget -O - --no-check-certificate https://git.io/nodebrew | perl - setup
 			;;
@@ -79,12 +79,16 @@ install_node() {
 			fi
 			;;
 		OpenBSD)
-			if [ $prefer_binary_package -eq 1 ]; then
+			if [ $prefer_binary_package -ne 1 ]; then
+				echo "$0: Using Node.js binary package is preferred for OpenBSD" 1>&2
+				acquire_root_privilege="$sudo"
+			fi
+			if [ $prefer_binary_package -eq 1 -o true ]; then
 				install_package node
 			else
 				{ has gmake || install_package gmake; } && \
 				install_package libexecinfo && \
-				CC=cc CXX=c++ MAKE=gmake nodebrew install $node_version
+				CC=cc CXX=c++ nodebrew install $node_version
 			fi
 			;;
 	esac
