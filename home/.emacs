@@ -27,6 +27,8 @@ package-archive-priorities '(("melpa-stable" . 1)))
 (setq exec-path-from-shell-arguments '("-i"))
 (exec-path-from-shell-initialize)
 
+(setq load-path (cons "~/.emacs.d/lisp" load-path))
+
 (defun load-directory (dir)
       (let ((load-it (lambda (f)
 		       (load-file (concat (file-name-as-directory dir) f)))
@@ -34,7 +36,6 @@ package-archive-priorities '(("melpa-stable" . 1)))
 	(mapc load-it (directory-files dir nil "\\.el$"))))
     (load-directory "~/.emacs.d/init.d/")
 
-(setq load-path (cons "~/.emacs.d/lisp" load-path))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
