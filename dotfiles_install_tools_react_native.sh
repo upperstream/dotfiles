@@ -120,7 +120,7 @@ install_watchman_prerequisites() {
 			esac
 			;;
 		OpenBSD)
-			install_package autoconf-2.69p2 automake-1.15.1 m4 gmake bash
+			install_package autoconf-2.69p2 automake-1.15.1 m4 gmake bash libtool
 			;;
 	esac
 }
@@ -142,12 +142,21 @@ install_watchman() {
 		Darwin|FreeBSD|NetBSD)
 			install watchman
 			;;
-		Linux|OpenBSD)
+		Linux)
 			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			autogen_watchman && \
 			./configure --without-python --without-pcre && \
 			make && $sudo make install) && \
+			rm -rf /tmp/watchman-*
+			;;
+		OpenBSD)
+			echo "$0: Error: Watchman does not support OpenBSD" 1>&2; return 1
+			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			(cd /tmp/watchman-* && \
+			autogen_watchman && \
+			CC=cc CXX=c++ ./configure --without-python --without-pcre && \
+			gmake && $sudo gmake install) && \
 			rm -rf /tmp/watchman-*
 			;;
 	esac
