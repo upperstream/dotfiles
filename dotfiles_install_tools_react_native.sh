@@ -212,8 +212,8 @@ has_exctags() {
 
 install_from_source_global() {
 	compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | sed 's/^\([0-9]*\)\.\([0-9]*\)$/\1\2/'`.tgz
-	download $compiler_url | $sudo tar -zxpf - -C /
-	download http://tamacom.com/global/global-6.6.1.tar.gz | tar -zxf - -C /
+	has gcc || { download $compiler_url | $sudo tar -zxpf - -C /; }
+	download http://tamacom.com/global/global-6.6.1.tar.gz | tar -zxf - -C /tmp
 	(cd /tmp/global-*; \
 	./configure --prefix=$HOME/.local --with-exuberant-ctags=`command -v ectags` && \
 	make && $sudo make install) && \
