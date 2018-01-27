@@ -137,7 +137,7 @@ linux_install_package() {
 install_package() {
 	cask=""
 	test "$1" = "-c" && { cask="cask"; shift; }
-	case $os in
+	case "$os" in
 		Darwin)
 			brew $cask install $@
 			;;
@@ -192,12 +192,12 @@ download() {
 }
 
 install_abduco() {
-	case $os in
+	case "$os" in
 		Darwin|FreeBSD)
 			install_package abduco
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine) alpine_enable_edge_repos && linux_install_package abduco;;
 				Devuan) linux_install_package dtach;;
 				*)      linux_install_package abduco;;
@@ -215,7 +215,7 @@ install_abduco() {
 }
 
 install_cdiff() {
-	case $os in
+	case "$os" in
 		FreeBSD)
 			install_package cdiff
 			;;
@@ -227,7 +227,7 @@ install_cdiff() {
 }
 
 install_dirstack() {
-	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		install_package make
 	fi && \
 	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz | tar -zxf - -C /tmp || return 1
@@ -245,7 +245,7 @@ install_from_source_dvtm() {
 }
 
 install_dvtm() {
-	case $os in
+	case "$os" in
 		Darwin)
 			brew install ncurses
 			brew link --force ncurses
@@ -259,7 +259,7 @@ install_dvtm() {
 			install_package dvtm
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					alpine_enable_community_repo && \
 					linux_install_package dvtm
@@ -291,7 +291,7 @@ install_from_source_editorconfig() {
 }
 
 install_editorconfig() {
-	case $os in
+	case "$os" in
 		Darwin)
 			brew install editorconfig
 			;;
@@ -299,7 +299,7 @@ install_editorconfig() {
 			install_package editorconfig-core-c
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					alpine_enable_community_repo && \
 					linux_install_package editorconfig
@@ -338,7 +338,7 @@ install_editorconfig() {
 }
 
 install_emacs() {
-	case $os in
+	case "$os" in
 		Darwin)
 			brew uninstall emacs
 			install_package -c emacs
@@ -347,7 +347,7 @@ install_emacs() {
 			install_package emacs25
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
 				CentOS) linux_install_package emacs;;
 				Debian) linux_install_package emacs25;;
@@ -370,7 +370,7 @@ install_emacs() {
 }
 
 install_emacs_nox11() {
-	case $os in
+	case "$os" in
 		Darwin)
 			brew cask uninstall emacs
 			install_package emacs
@@ -379,7 +379,7 @@ install_emacs_nox11() {
 			install_package emacs-nox11
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
 				CentOS) linux_install_package emacs-nox;;
 				Debian) linux_install_package emacs25-nox;;
@@ -402,12 +402,12 @@ install_emacs_nox11() {
 }
 
 install_markdown() {
-	case $os in
+	case "$os" in
 		FreeBSD|NetBSD|OpenBSD)
 			install_package p5-Text-Markdown
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine) alpine_enable_community_repo && install_package markdown;;
 				CentOS) linux_install_package perl-Text-Markdown;;
 				*)      linux_install_package markdown;;
@@ -420,14 +420,14 @@ install_markdown() {
 }
 
 install_stow() {
-	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		alpine_enable_community_repo
 	fi && \
 	install_package stow
 }
 
 __install_micro() {
-	if [ $os = "Linux" -a $distribution = "Alpine" ]; then
+	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		alpine_enable_edge_repos && \
 		linux_install_package micro
 	else
@@ -448,7 +448,7 @@ __install_micro() {
 }
 
 install_micro() {
-	case $os in
+	case "$os" in
 		Linux)
 			__install_micro linux64
 			;;
@@ -462,9 +462,9 @@ install_micro() {
 }
 
 install_pip() {
-	case $os in
+	case "$os" in
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					linux_install_package py2-pip
 					;;
@@ -493,7 +493,7 @@ install_pip() {
 }
 
 install_xsel() {
-	case $os in
+	case "$os" in
 		Darwin)
 			brew install xclip
 			;;
@@ -501,7 +501,7 @@ install_xsel() {
 			install_package xsel
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine) install_package xclip;;
 				*)      install_package xsel;;
 			esac

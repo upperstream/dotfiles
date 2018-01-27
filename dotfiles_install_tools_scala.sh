@@ -9,7 +9,7 @@ EOF
 
 install_sbt() {
 	has bash || install bash
-	case $os in
+	case "$os" in
 		Darwin)
 			install_package sbt@1
 			;;
@@ -17,7 +17,7 @@ install_sbt() {
 			install_package sbt
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					alpine_enable_edge_repos && \
 					linux_install_package sbt
@@ -49,12 +49,12 @@ install_sbt() {
 }
 
 install_jdk() {
-	case $os in
+	case "$os" in
 		FreeBSD)
 			install_package openjdk8
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					alpine_enable_community_repo && \
 					linux_install_package openjdk8 && \
@@ -86,9 +86,9 @@ install_jdk() {
 }
 
 install_java_source() {
-	case $os in
+	case "$os" in
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
 				Debian|Ubuntu) linux_install_package openjdk-8-source;;
 				Devuan)        linux_install_package openjdk-7-source;;

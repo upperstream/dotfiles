@@ -8,7 +8,7 @@ EOF
 }
 
 install_nodebrew() {
-	case $os in
+	case "$os" in
 		FreeBSD|Linux|Darwin|NetBSD)
 			{ has wget || install wget; } && \
 			wget -O - --no-check-certificate https://git.io/nodebrew | perl - setup
@@ -22,7 +22,7 @@ install_nodebrew() {
 default_node_version=7.10.1
 
 install_node_dependencies() {
-	case $os in
+	case "$os" in
 		FreeBSD)
 			install_package python27 && \
 			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
@@ -41,7 +41,7 @@ install_node_dependencies() {
 install_node() {
 	node_version=${1:-$default_node_version}
 	install_node_dependencies && \
-	case $os in
+	case "$os" in
 		Darwin)
 			nodebrew install-binary $node_version && \
 			nodebrew use $node_version
@@ -91,7 +91,7 @@ install_node() {
 }
 
 install_exp() {
-	case $os in
+	case "$os" in
 		OpenBSD)
 			echo "Error: $0: exp does not support $os.  This error is not fatal." 1>&2
 			;;
@@ -102,9 +102,9 @@ install_exp() {
 }
 
 install_watchman_prerequisites() {
-	case $os in
+	case "$os" in
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)
 					install m4 libtool autoconf pkgconfig gcc-c++ && \
 					install openssl-devel
@@ -122,7 +122,7 @@ install_watchman_prerequisites() {
 }
 
 autogen_watchman() {
-	case $os in
+	case "$os" in
 		Linux)
 			./autogen.sh
 			;;
@@ -134,7 +134,7 @@ autogen_watchman() {
 
 install_watchman() {
 	install_watchman_prerequisites && \
-	case $os in
+	case "$os" in
 		Darwin|FreeBSD|NetBSD)
 			install watchman
 			;;
@@ -150,13 +150,13 @@ install_watchman() {
 }
 
 install_exctags() {
-	case $os in
+	case "$os" in
 		Darwin)
 			install_package ctags && \
 			brew link --overwrite ctags
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)
 					install_package ctags-etags
 					;;
@@ -181,7 +181,7 @@ install_exctags() {
 }
 
 has_exctags() {
-	case $os in
+	case "$os" in
 		Darwin)
 			ctags --version | grep -F 'Exuberant Ctags' > /dev/null 2>&1
 			;;
@@ -189,7 +189,7 @@ has_exctags() {
 			has exctags
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)
 					has etags.ctags
 					;;
@@ -221,12 +221,12 @@ install_from_source_global() {
 }
 
 install_global() {
-	case $os in
+	case "$os" in
 		Darwin)
 			install_package global --with-exuberant-ctags --with-pygments
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)
 					install_package global-ctags
 					;;
@@ -245,9 +245,9 @@ install_global() {
 }
 
 install_xde_prerequisites() {
-	case $os in
+	case "$os" in
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				CentOS)
 					install_package --enablerepo=epel fuse-sshfs && \
 					{ grep fuse /etc/group > /dev/null || $sudo groupadd fuse; } && \
@@ -295,7 +295,7 @@ EOF
 
 install_xde() {
 	install_xde_prerequisites && \
-	case $os in
+	case "$os" in
 		Darwin)
 			install_package -c expo-xde
 			;;
