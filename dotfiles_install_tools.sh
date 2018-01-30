@@ -46,63 +46,76 @@ while getopts bs:xH opt; do
 	esac
 done
 
-locate_pip() {
-	pip=`command -v pip 2>/dev/null` || pip=`command -v pip2.7 2>/dev/null` || return 1
-	echo "pip=$pip"
-}
-
-os=""
-distribution=""
-
 determine_operating_system() {
-	test -z "$os" && os=`uname`
-	if [ "$os" = "Linux" ]; then
-		name=`cat /etc/*release | grep -F "NAME="`
-		case $name in
-			*Alpine*)
-				distribution="Alpine"
-				;;
-			*CentOS*)
-				distribution="CentOS"
-				;;
-			*Debian*)
-				distribution="Debian"
-				;;
-			*Devuan*)
-				distribution="Devuan"
-				;;
-			*Ubuntu*)
-				distribution="Ubuntu"
-				;;
-			*)
-				echo "$0: Warning: Unknown distribution: $name" 1>&2
-				;;
-		esac
-	fi
-
-	echo "OS=$os"
-	test "$os" = "Linux" && echo "DISTRIBUTION=$distribution"
+	echo `uname`
 }
 
-pkgmgr=""
+linux_determine_distribution() {
+	name=`cat /etc/*release | grep -F "NAME="`
+	case $name in
+		*Alpine*) echo "Alpine";;
+		*CentOS*) echo "CentOS";;
+		*Debian*) echo "Debian";;
+		*Devuan*) echo "Devuan";;
+		*Ubuntu*) echo "Ubuntu";;
+		*)        echo "$0: Warning: Unknown distribution: $name" 1>&2; return 1;;
+	esac
+	return 0
+}
 
-determine_package_manager() {
+linux_determine_package_manager() {
 	for name in apk apt-get yum; do
 		has $name && { echo $name; return 0; }
 	done
 	return 1
 }
 
-sudo=""
 determine_sudo_command() {
 	for name in sudo doas; do
-		if has $name; then
-			sudo=$name
-			echo "sudo=$name"
-			return 0
-		fi
+		has $name && { echo $name; return 0; }
 	done
 	return 1
+}
+
+locate_pip() {
+	for name in pip pip2.7; do
+		path=`command -v $name 2>/dev/null` && { echo $path; return 0; }
+	done
+	return 1
+}
+
+determine_downloader() {
+	test "$os" != "Linux" -a "$os" != "Darwin" && for name in fetch ftp; do
+		has $name && { echo $name; return 0; }
+	done
+	for name in curl wget; do
+		has $name && { echo $name; return 0; }
+	done
+	install curl && { echo "curl"; return 0; }
+	install wget && { echo "wget"; return 0; }
+}
+
+inspect_current_environment() {
+	cat <<-EOF
+	-----------------------------------------
+	Inspecting current environment
+	-----------------------------------------
+EOF
+	os=`determine_operating_system`
+	if [ "$os" = "Linux" ]; then
+		distribution=`linux_determine_distribution`
+		pkgmgr=`linux_determine_package_manager`
+	fi
+	sudo=`determine_sudo_command`
+	downloader=`determine_downloader`
+	locate_pip
+
+	echo "os=$os"
+	echo "distribution=$distribution"
+	echo "sudo=$sudo"
+	echo "downloader=$downloader"
+	echo "pkgmgr=$pkgmgr"
+	echo "pip=$pip"
 }
 
 alpine_enable_community_repo() {
@@ -120,7 +133,6 @@ alpine_enable_edge_repos() {
 }
 
 linux_install_package() {
-	test -z "$pkgmgr" && { pkgmgr=`determine_package_manager` || return 1; }
 	case $pkgmgr in
 		apk)
 			$sudo apk add $@
@@ -160,21 +172,7 @@ install_package() {
 	esac
 }
 
-determine_downloader() {
-	test "$os" != "Linux" -a "$os" != "Darwin" && for name in fetch ftp; do
-		has $name && { echo $name; return 0; }
-	done
-	for name in curl wget; do
-		has $name && { echo $name; return 0; }
-	done
-	install curl && { echo curl; return 0; }
-	install wget && { echo wget; return 0; }
-}
-
-downloader=""
-
 download() {
-	test -z "$downloader" && { downloader=`determine_downloader` || return 1; }
 	case $downloader in
 		fetch)
 			fetch -o- $1
@@ -548,63 +546,83 @@ has() {
 	command -v $1 >/dev/null
 }
 
-locate_pip
-determine_operating_system
-determine_sudo_command
-if [ $prefer_binary_package -eq 1 ]; then
-	printf "Install binary package rather than compiling source code\n"
-fi
-printf "Additional sets to install: $sets\n"
+install_terminal_tools() {
+	cat <<-EOF
+	-----------------------------------------
+	Installing tools running in terminal
+	-----------------------------------------
+EOF
 
-test -d ~/.local/bin || mkdir -p ~/.local/bin
+	# Micro editor
+	has micro || install micro
 
-# Micro editor
-has micro || install micro
+	# EditorConfig Core C
+	has editorconfig || install editorconfig
 
-# EditorConfig Core C
-has editorconfig || install editorconfig
+	# nano
+	has nano || install nano
 
-# nano
-has nano || install nano
+	# Markdown
+	{ has Markdown || has Markdown.pl; } || install Markdown
 
-# Markdown
-{ has Markdown || has Markdown.pl; } || install Markdown
+	# lynx
+	has lynx || install lynx
 
-# lynx
-has lynx || install lynx
+	# dirstack
+	has dirstack.sh || install dirstack
 
-# dirstack
-has dirstack.sh || install dirstack
+	# cdiff
+	has cdiff || install cdiff
 
-# cdiff
-has cdiff || install cdiff
+	# adbuco or dtach
+	{ has abduco || has dtach; } || install abduco
 
-# adbuco or dtach
-{ has abduco || has dtach; } || install abduco
+	# dvtm
+	has dvtm || install dvtm
 
-# dvtm
-has dvtm || install dvtm
+	# mg
+	has mg || install mg
 
-# mg
-has mg || install mg
+	# Emacs
+	test $with_x11 -eq 0 && install emacs-nox11
+}
 
-# Emacs
-test $with_x11 -eq 0 && install emacs-nox11
+install_sets() {
+	for s in `echo $sets`; do
+		if [ -f $dotfiles_dir/dotfiles_install_tools_$s.sh ]; then
+			. $dotfiles_dir/dotfiles_install_tools_$s.sh && install_tools_$s
+		else
+			echo "Error: $0: $dotfiles_dir/dotfiles_install_tools_$s.sh not found" 1>&2
+		fi
+	done
+}
 
-for s in `echo $sets`; do
-	if [ -f $dotfiles_dir/dotfiles_install_tools_$s.sh ]; then
-		. $dotfiles_dir/dotfiles_install_tools_$s.sh && install_tools_$s
-	else
-		echo "Error: $0: $dotfiles_dir/dotfiles_install_tools_$s.sh not found" 1>&2
+install_x11_tools() {
+	cat <<-EOF
+	-----------------------------------------
+	Installing tools running on window system
+	-----------------------------------------
+EOF
+
+	# XSel or xclip
+	{ has xsel || has xclip; } || install xsel
+
+	# Emacs
+	install emacs
+}
+
+main() {
+	if [ $prefer_binary_package -eq 1 ]; then
+		printf "Install binary package rather than compiling source code\n"
 	fi
-done
+	printf "Additional sets to install: $sets\n"
 
-test $with_x11 -eq 1 || exit
+	test -d $HOME/.local/bin || mkdir -p $HOME/.local/bin
 
-# Additional tools for X Window System
+	inspect_current_environment
+	install_terminal_tools
+	install_sets
+	test $with_x11 -eq 1 && install_x11_tools
+}
 
-# XSel or xclip
-{ has xsel || has xclip; } || install xsel
-
-# Emacs
-install emacs
+main

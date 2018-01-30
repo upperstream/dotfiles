@@ -1,4 +1,4 @@
-#!/bin/sh
+# Script to set up GOlang environment
 
 golang_describe_module() {
 	cat <<-EOF
@@ -45,6 +45,12 @@ install_golang() {
 }
 
 install_tools_golang() {
+	cat <<-EOF
+	-----------------------------------------
+	Installing tools for Golang
+	-----------------------------------------
+EOF
+
 	install git
 	install_golang
 	GOPATH=$HOME/go

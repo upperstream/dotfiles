@@ -1,4 +1,4 @@
-#!/bin/sh
+# Script to set up Scalanenvironment
 
 scala_describe_module() {
 	cat <<-EOF
@@ -98,6 +98,12 @@ install_java_source() {
 }
 
 install_tools_scala() {
+	cat <<-EOF
+	-----------------------------------------
+	Installing tools for Scala
+	-----------------------------------------
+EOF
+
 	install jdk java-source sbt
 #	install scala scala-doc scala-mode-el
 }

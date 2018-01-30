@@ -1,4 +1,4 @@
-#!/bin/sh
+# Script to setp up React Native environment
 
 react_native_describe_module() {
 	cat <<-EOF
@@ -326,6 +326,12 @@ install_xde() {
 }
 
 install_tools_react_native() {
+	cat <<-EOF
+	-----------------------------------------
+	Installing tools for React Native
+	-----------------------------------------
+EOF
+
 	acquire_root_privilege=""
 	test $prefer_binary_package -eq 1 && acquire_root_privilege=$sudo
 	has nodebrew || install_nodebrew;
