@@ -68,7 +68,11 @@ install_node() {
 			nodebrew use $node_version
 			;;
 		NetBSD)
-			if [ $prefer_binary_package -eq 1 ]; then
+			if [ $prefer_binary_package -ne 1 ]; then
+				echo "$0: Using Node.js binary package is preferred for NetBSD" 1>&2
+				acquire_root_privilege="$sudo"
+			fi
+			if [ $prefer_binary_package -eq 1 -o true ]; then
 				install_package nodejs-8.4.0nb1 && \
 				$sudo npm install -g npm@4
 			else
