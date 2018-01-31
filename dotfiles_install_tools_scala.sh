@@ -50,6 +50,9 @@ install_sbt() {
 
 install_jdk() {
 	case "$os" in
+		Darwin)
+			install_package -c java
+			;;
 		FreeBSD)
 			install_package openjdk8
 			;;
