@@ -108,7 +108,7 @@ EOF
 	fi
 	sudo=`determine_sudo_command`
 	downloader=`determine_downloader`
-	locate_pip
+	pip=`locate_pip`
 
 	echo "os=$os"
 	echo "distribution=$distribution"
@@ -486,7 +486,7 @@ install_pip() {
 			;;
 	esac
 	rc=$?
-	locate_pip
+	pip=`locate_pip`
 	return $?
 }
 
