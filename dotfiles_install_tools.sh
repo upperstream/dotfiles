@@ -491,7 +491,8 @@ install_pip() {
 			;;
 		*)
 			{ has python || install python; } && \
-			download https://bootstrap.pypa.io/get-pip.py | python - --user
+			{ download https://bootstrap.pypa.io/get-pip.py | python - --user; } && \
+			PATH=$PATH:`python -m site --user-base`/bin
 			;;
 	esac
 	rc=$?
