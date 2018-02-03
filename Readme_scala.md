@@ -6,7 +6,8 @@ environment with [Scala](https://www.scala-lang.org/).  This includes
 the following tools:
 
 * [ENSIME](http://ensime.github.io/)
-* [OpenJDK](https://www.scala-lang.org/)
+* [OpenJDK](https://www.scala-lang.org/) or
+  [Oracle JDK](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 * [sbt](https://www.scala-sbt.org/)
 * [sbt-mode](http://ensime.github.io/editors/emacs/sbt-mode/)
 * [scala-mode](http://ensime.github.io/editors/emacs/scala-mode/)
