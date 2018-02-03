@@ -1,4 +1,6 @@
 # Script to setp up React Native environment
+# Copyright (C) 2018 Upperstream Software.
+# Provided under the ISC License.  See LICENSE.txt file for details.
 
 react_native_describe_module() {
 	cat <<-EOF
@@ -52,7 +54,8 @@ install_node() {
 				install gmake && \
 				install node6 && \
 				if [ ! -f /usr/ports/Makefile ]; then
-					fetch -o - http://ftp.jaist.ac.jp/pub/FreeBSD/releases/amd64/amd64/11.1-RELEASE/ports.txz | sudo tar zxpf - -C /
+					fetch -o - http://ftp.jaist.ac.jp/pub/FreeBSD/releases/amd64/amd64/11.1-RELEASE/ports.txz | \
+						sudo tar zxpf - -C /
 				fi && \
 				(install_package gmake && \
 				cd /usr/ports/www/npm3 && \
@@ -101,7 +104,7 @@ install_node() {
 install_exp() {
 	case "$os" in
 		OpenBSD)
-			echo "Error: $0: exp does not support $os.  This error is not fatal." 1>&2
+			echo "$0: Error: exp does not support $os.  This error is not fatal." 1>&2
 			;;
 		*)
 			$acquire_root_privilege npm install -g exp
@@ -147,7 +150,8 @@ install_watchman() {
 			install watchman
 			;;
 		Linux)
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
+				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			autogen_watchman && \
 			./configure --without-python --without-pcre && \
@@ -156,7 +160,8 @@ install_watchman() {
 			;;
 		OpenBSD)
 			echo "$0: Error: Watchman does not support OpenBSD" 1>&2; return 1
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
+				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			autogen_watchman && \
 			CC=cc CXX=c++ ./configure --without-python --without-pcre && \
@@ -281,9 +286,10 @@ install_xde_prerequisites() {
 			esac
 			;;
 		OpenBSD)
-			echo "Error: $0: watchman does not support $os.  This error is not fatal." 1>&2
+			echo "$0: Error: watchman does not support $os.  This error is not fatal." 1>&2
 			return 1
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
+				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
 			(cd /tmp/watchman-* && \
 			if [ ! -f .dotfiles.patched ]; then
 				patch -p1 <<-EOF
@@ -324,7 +330,7 @@ install_xde() {
 			mv /tmp/xde-*.AppImage $HOME/.local/bin/ && chmod +x $HOME/.local/bin/xde-*.AppImage
 			;;
 		*)
-			echo "Error: $0: XDE does not support $os.  This error is not fatal." 1>&2
+			echo "$0: Error: XDE does not support $os.  This error is not fatal." 1>&2
 			;;
 	esac
 }
@@ -338,15 +344,17 @@ EOF
 
 	acquire_root_privilege=""
 	test $prefer_binary_package -eq 1 && acquire_root_privilege=$sudo
-	has nodebrew || install_nodebrew;
-	has node || install_node
-	has create-react-native-app || $acquire_root_privilege npm install -g create-react-native-app
-	has exp || install_exp
-	has watchman || install_watchman
-	has tern || $acquire_root_privilege npm install -g tern
-	has_exctags || install_exctags
-	has global || install_global
+	has nodebrew || install_nodebrew || report_error
+	has node || install_node || report_error
+	has create-react-native-app || \
+		$acquire_root_privilege npm install -g create-react-native-app || report_error
+	has exp || install_exp || reprot_error
+	has watchman || install_watchman || report_error
+	has tern || $acquire_root_privilege npm install -g tern || report_error
+	has_exctags || install_exctags || report_error
+	has global || install_global || report_error
 	if [ $with_x11 -eq 1 ]; then
-		test -f `echo $HOME/.local/bin/xde-*-x86_64.AppImage | cut -f1 -d' '` || install_xde
+		test -f `echo $HOME/.local/bin/xde-*-x86_64.AppImage | cut -f1 -d' '` || \
+			install_xde || report_error
 	fi
 }

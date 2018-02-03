@@ -1,8 +1,9 @@
 #!/bin/sh
 # Install basic tools.
-# Copyright (C) 2017 Upperstream Software.
+# Copyright (C) 2017, 2018 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
+set -e
 #set -x
 
 dotfiles_dir=`dirname $0`
@@ -10,10 +11,11 @@ dotfiles_dir=`dirname $0`
 usage() {
 	cat <<-EOF
 	Usage:
-	$0 [-bx] [-s set]
+	$0 [-bkx] [-s set]
 	$0 -H|--help
 
 	-b : prefer installing binary package over compiling source code
+	-k : keep going even if some software can't be installed
 	-s set
 	   : install specified set of tools; see below list for available sets
 	-x : install additional tools for X Window System; this may install
@@ -36,15 +38,28 @@ prefer_binary_package=0
 with_x11=0
 
 sets=""
+keep_going=0
 
-while getopts bs:xH opt; do
+while getopts bks:xH opt; do
 	case $opt in
 		b) prefer_binary_package=1;;
+		k) keep_going=1;;
 		s) sets=`printf "$sets\n$OPTARG"`;;
 		x) with_x11=1;;
 		H) usage; exit 255;;
 	esac
 done
+
+error=0
+report_error() {
+	if [ $keep_going -eq 1 ]; then
+		test $error -lt 254 && error=`expr $error + 1`
+		return 0
+	else
+		echo "$0: Error: installation failed" 1>&2
+		return 1
+	fi
+}
 
 determine_operating_system() {
 	echo `uname`
@@ -108,7 +123,7 @@ EOF
 	fi
 	sudo=`determine_sudo_command`
 	downloader=`determine_downloader`
-	pip=`locate_pip`
+	pip=`locate_pip` || true
 
 	echo "os=$os"
 	echo "distribution=$distribution"
@@ -196,9 +211,15 @@ install_abduco() {
 			;;
 		Linux)
 			case "$distribution" in
-				Alpine) alpine_enable_edge_repos && linux_install_package abduco;;
-				Devuan) linux_install_package dtach;;
-				*)      linux_install_package abduco;;
+				Alpine)
+					alpine_enable_edge_repos && linux_install_package abduco
+					;;
+				Debian|Devuan)
+					linux_install_package dtach
+					;;
+				*)
+					linux_install_package abduco
+					;;
 			esac
 			;;
 		NetBSD|OpenBSD)
@@ -218,7 +239,7 @@ install_cdiff() {
 			install_package cdiff
 			;;
 		*)
-			has pip || install pip
+			{ has pip || install pip; } && \
 			$pip install --user cdiff
 			;;
 	esac
@@ -564,45 +585,48 @@ install_terminal_tools() {
 EOF
 
 	# Micro editor
-	has micro || install micro
+	has micro || install micro || report_error
 
 	# EditorConfig Core C
-	has editorconfig || install editorconfig
+	has editorconfig || install editorconfig || report_error
 
 	# nano
-	has nano || install nano
+	has nano || install nano || report_error
 
 	# Markdown
-	{ has Markdown || has Markdown.pl; } || install Markdown
+	{ has Markdown || has markdown || has Markdown.pl; } || install Markdown || report_error
 
 	# lynx
-	has lynx || install lynx
+	has lynx || install lynx || report_error
 
 	# dirstack
-	has dirstack.sh || install dirstack
+	has dirstack.sh || install dirstack || report_error
 
 	# cdiff
-	has cdiff || install cdiff
+	has cdiff || install cdiff || report_error
 
 	# adbuco or dtach
-	{ has abduco || has dtach; } || install abduco
+	{ has abduco || has dtach; } || install abduco || report_error
 
 	# dvtm
-	has dvtm || install dvtm
+	has dvtm || install dvtm || report_error
 
 	# mg
-	has mg || install mg
+	has mg || install mg || report_error
 
 	# Emacs
-	test $with_x11 -eq 0 && install emacs-nox11
+	if [ $with_x11 -eq 0 ]; then
+		install emacs-nox11 || report_error
+	fi
 }
 
 install_sets() {
 	for s in `echo $sets`; do
 		if [ -f $dotfiles_dir/dotfiles_install_tools_$s.sh ]; then
-			. $dotfiles_dir/dotfiles_install_tools_$s.sh && install_tools_$s
+			{ . $dotfiles_dir/dotfiles_install_tools_$s.sh && install_tools_$s; } || report_error
 		else
 			echo "Error: $0: $dotfiles_dir/dotfiles_install_tools_$s.sh not found" 1>&2
+			report_error
 		fi
 	done
 }
@@ -615,10 +639,10 @@ install_x11_tools() {
 EOF
 
 	# XSel or xclip
-	{ has xsel || has xclip; } || install xsel
+	{ has xsel || has xclip; } || install xsel || report_error
 
 	# Emacs
-	install emacs
+	install emacs || report_error
 }
 
 main() {
@@ -632,7 +656,16 @@ main() {
 	inspect_current_environment
 	install_terminal_tools
 	install_sets
-	test $with_x11 -eq 1 && install_x11_tools
+	{ test $with_x11 -eq 1 && install_x11_tools; } || true
 }
 
 main
+
+if [ $error -eq 0 ]; then
+	echo "$0: installation succeeded"
+elif [ $error -eq 1 ]; then
+	echo "$0: an error reported during installation" 1>&2
+elif [ $error -gt 1 ]; then
+	echo "$0: $error errors reported during installation" 1>&2
+fi
+exit $error

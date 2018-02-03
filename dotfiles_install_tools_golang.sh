@@ -1,4 +1,6 @@
-# Script to set up GOlang environment
+# Script to set up Golang environment
+# Copyright (C) 2018 Upperstream Software.
+# Provided under the ISC License.  See LICENSE.txt file for details.
 
 golang_describe_module() {
 	cat <<-EOF
@@ -51,13 +53,15 @@ install_tools_golang() {
 	-----------------------------------------
 EOF
 
-	install git
-	install_golang
+	has git || install git || report_error
+	has go || install_golang || report_error
 	GOPATH=$HOME/go
 	export GOPATH
 	test -d $GOPATH || mkdir -p $GOPATH
-	go_install_package github.com/nsf/gocode github.com/jstemmer/gotags
-	install joe
+	PATH=$PATH:$GOPATH/bin
+	has gocode || go_install_package github.com/nsf/gocode || report_error
+	has gotags || go_install_package github.com/jstemmer/gotags || report_error
+	has joe || install joe || report_error
 	test -d $HOME/.emacs.d/lisp || mkdir -p $HOME/.emacs.d/lisp
 	if [ ! -f $HOME/.emacs.d/lisp/gotags.el ]; then
 		download https://raw.githubusercontent.com/craig-ludington/gotags-el/master/me-alpheus-gotags.el > $HOME/.emacs.d/lisp/gotags.el

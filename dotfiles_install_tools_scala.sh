@@ -1,4 +1,6 @@
 # Script to set up Scalanenvironment
+# Copyright (C) 2018 Upperstream Software.
+# Provided under the ISC License.  See LICENSE.txt file for details.
 
 scala_describe_module() {
 	cat <<-EOF
@@ -24,14 +26,16 @@ install_sbt() {
 					;;
 				CentOS)
 					if ! grep "name=bintray--sbt-rpm" /etc/yum.repos.d/bintray-sbt-rpm.repo; then
-						download https://bintray.com/sbt/rpm/rpm | $sudo tee -a /etc/yum.repos.d/bintray-sbt-rpm.repo
+						download https://bintray.com/sbt/rpm/rpm | \
+							$sudo tee -a /etc/yum.repos.d/bintray-sbt-rpm.repo
 					fi
 					linux_install_package sbt
 					;;
 				Debian|Devuan|Ubuntu)
 					linux_install_package apt-transport-https dirmngr
 					if ! grep "^deb https://dl.bintray.com/sbt/debian" /etc/apt/sources.list.d/sbt.list; then
-						echo "deb https://dl.bintray.com/sbt/debian /" | $sudo tee -a /etc/apt/sources.list.d/sbt.list
+						echo "deb https://dl.bintray.com/sbt/debian /" | \
+							$sudo tee -a /etc/apt/sources.list.d/sbt.list
 						$sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 						$sudo apt-get update
 					fi
@@ -41,7 +45,8 @@ install_sbt() {
 			;;
 		NetBSD|OpenBSD)
 			if ! has sbt; then
-				download https://github.com/sbt/sbt/releases/download/v1.0.4/sbt-1.0.4.tgz | tar -zxf - -C ~/.local && \
+				download https://github.com/sbt/sbt/releases/download/v1.0.4/sbt-1.0.4.tgz | \
+					tar -zxf - -C ~/.local && \
 				(cd ~/.local/bin; ln -sf ../sbt/bin/* .)
 			fi
 			;;
@@ -80,7 +85,8 @@ install_jdk() {
 			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
+				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | \
+					tr -d '.'`.tgz | $sudo tar -zxpf - -C /
 			fi
 			install_package jdk && \
 			(cd ~/.local/bin; ln -sf /usr/local/jdk-1.8.0/bin/* .)
@@ -107,6 +113,8 @@ install_tools_scala() {
 	-----------------------------------------
 EOF
 
-	install jdk java-source sbt
+	has javac || install jdk || report_error
+	install java-source || report_error
+	has sbt || install sbt || report_error
 #	install scala scala-doc scala-mode-el
 }
