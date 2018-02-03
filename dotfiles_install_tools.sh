@@ -225,8 +225,17 @@ install_cdiff() {
 }
 
 install_dirstack() {
-	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
-		install_package make
+	if [ "$os" = "Linux" ]; then
+		case "$distribution" in
+			Alpine)
+				alpine_enable_edge_repos && \
+				{ has mandb || install_package man-db; } && \
+				{ has make || install_package make; }
+				;;
+			Ubuntu)
+				has mandb || install_package man-db
+				;;
+		esac
 	fi && \
 	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz | tar -zxf - -C /tmp || return 1
 	(cd /tmp/upperstream-dirstack-* && \
