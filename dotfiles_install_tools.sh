@@ -57,7 +57,7 @@ report_error() {
 		return 0
 	else
 		echo "$0: Error: installation failed" 1>&2
-		return 1
+		exit 1
 	fi
 }
 
