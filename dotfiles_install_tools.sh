@@ -69,6 +69,7 @@ linux_determine_distribution() {
 	name=`cat /etc/*release | grep -F "NAME="`
 	case $name in
 		*Alpine*) echo "Alpine";;
+		*Arch*)   echo "Arch";;
 		*CentOS*) echo "CentOS";;
 		*Debian*) echo "Debian";;
 		*Devuan*) echo "Devuan";;
@@ -79,7 +80,7 @@ linux_determine_distribution() {
 }
 
 linux_determine_package_manager() {
-	for name in apk apt-get yum; do
+	for name in apk apt-get pacman yum; do
 		has $name && { echo $name; return 0; }
 	done
 	return 1
@@ -154,6 +155,9 @@ linux_install_package() {
 			;;
 		apt-get)
 			$sudo apt-get install -y $@
+			;;
+		pacman)
+			$sudo pacman -Syu --noconfirm $@
 			;;
 		yum)
 			$sudo yum install -y $@
@@ -253,6 +257,9 @@ install_dirstack() {
 				{ has mandb || install_package man-db; } && \
 				{ has make || install_package make; }
 				;;
+			Arch)
+				has make || install_package make
+				;;
 			Ubuntu)
 				has mandb || install_package man-db
 				;;
@@ -297,12 +304,11 @@ install_dvtm() {
 					has gcc || linux_install_package gcc
 					install_from_source_dvtm
 					;;
-				Debian|Devuan|Ubuntu)
-					linux_install_package dvtm
-					;;
 				*)
-					echo "$0: Error: Unsupported platform: $distribution" 1>&2
-					return 1
+					if ! linux_install_package dvtm; then
+						echo "$0: Error: Don't know how to install dvtm on $distribution" 1>&2
+						return 1
+					fi
 					;;
 			esac
 			;;
@@ -331,6 +337,9 @@ install_editorconfig() {
 				Alpine)
 					alpine_enable_community_repo && \
 					linux_install_package editorconfig
+					;;
+				Arch)
+					linux_install_package editorconfig-core-c
 					;;
 				CentOS)
 					for t in cmake pcre-devel; do
@@ -377,6 +386,7 @@ install_emacs() {
 		Linux)
 			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
+				Arch)   yes | $sudo pacman -Syu emacs;;
 				CentOS) linux_install_package emacs;;
 				Debian) linux_install_package emacs25;;
 				Devuan) linux_install_package emacs;;
@@ -409,6 +419,7 @@ install_emacs_nox11() {
 		Linux)
 			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
+				Arch)   yes | $sudo pacman -Syu emacs-nox;;
 				CentOS) linux_install_package emacs-nox;;
 				Debian) linux_install_package emacs25-nox;;
 				Devuan) linux_install_package emacs-nox;;
@@ -499,8 +510,11 @@ install_pip() {
 				CentOS)
 					linux_install_package python2-pip
 					;;
-				Debian|Devuan|Ubuntu)
-					install_package python-pip
+				*)
+					if ! linux_install_package python-pip; then
+						echo "$0: Error: Don't know how to install pip on $distribution" 1>&2
+						report_error
+					fi
 					;;
 			esac
 			;;

@@ -116,6 +116,9 @@ install_watchman_prerequisites() {
 	case "$os" in
 		Linux)
 			case "$distribution" in
+				Arch)
+					install m4 autoconf automake pkg-config clang
+					;;
 				CentOS)
 					install m4 libtool autoconf pkgconfig gcc-c++ && \
 					install openssl-devel
@@ -249,6 +252,10 @@ install_global() {
 			;;
 		Linux)
 			case "$distribution" in
+				Arch)
+					echo "$0: Error: Installing GNU GLOBAL on Arch Linux is not supported.  This error is not fatal." 1>&2
+					return 0
+					;;
 				CentOS)
 					install_package global-ctags
 					;;

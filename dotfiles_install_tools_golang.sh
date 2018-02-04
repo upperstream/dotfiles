@@ -23,6 +23,9 @@ install_golang() {
 				Alpine)
 					alpine_enable_edge_repos && linux_install_package libc-dev go
 					;;
+				Arch)
+					linux_install_package go
+					;;
 				*)
 					linux_install_package golang
 					;;

@@ -24,6 +24,9 @@ install_sbt() {
 					alpine_enable_edge_repos && \
 					linux_install_package sbt
 					;;
+				Arch)
+					linux_install_package sbt
+					;;
 				CentOS)
 					if ! grep "name=bintray--sbt-rpm" /etc/yum.repos.d/bintray-sbt-rpm.repo; then
 						download https://bintray.com/sbt/rpm/rpm | \
@@ -68,6 +71,9 @@ install_jdk() {
 					linux_install_package openjdk8 && \
 					(cd /usr/bin && $sudo ln -sf /usr/lib/jvm/default-jvm/bin/* .)
 					;;
+				Arch)
+					linux_install_package jdk8-openjdk
+					;;
 				CentOS)
 					linux_install_package java-1.8.0-openjdk-devel
 					;;
@@ -98,6 +104,7 @@ install_java_source() {
 	case "$os" in
 		Linux)
 			case "$distribution" in
+				Arch)          linux_install_package openjdk8-src;;
 				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
 				Debian|Ubuntu) linux_install_package openjdk-8-source;;
 				Devuan)        linux_install_package openjdk-7-source;;

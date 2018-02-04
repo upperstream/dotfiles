@@ -55,6 +55,7 @@ At the time of writing this, the script supports [FreeBSD][],
 distributions:
 
 * [Alpine Linux](https://alpinelinux.org/)
+* [Arch Linux](https://www.archlinux.org/)
 * [CentOS](https://www.centos.org/)
 * [Debian](https://www.debian.org/)
 * [Devuan GNU+Linux](https://devuan.org/)
