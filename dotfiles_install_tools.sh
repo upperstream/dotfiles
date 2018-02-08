@@ -12,7 +12,7 @@ usage() {
 	cat <<-EOF
 	Usage:
 	$0 [-bkx] [-s set]
-	$0 -H|--help
+	$0 -H|-h|--help
 
 	-b : prefer installing binary package over compiling source code
 	-k : keep going even if some software can't be installed
@@ -20,7 +20,7 @@ usage() {
 	   : install specified set of tools; see below list for available sets
 	-x : install additional tools for X Window System; this may install
 	     X Window System as a part of dependencies
-	-H|--help
+	-H|-h|--help
 	   : print this help summary and exit
 
 	Available sets are:
@@ -40,13 +40,13 @@ with_x11=0
 sets=""
 keep_going=0
 
-while getopts bks:xH opt; do
+while getopts bhks:xH opt; do
 	case $opt in
-		b) prefer_binary_package=1;;
-		k) keep_going=1;;
-		s) sets=`printf "$sets\n$OPTARG"`;;
-		x) with_x11=1;;
-		H) usage; exit 255;;
+		b)   prefer_binary_package=1;;
+		k)   keep_going=1;;
+		s)   sets=`printf "$sets\n$OPTARG"`;;
+		x)   with_x11=1;;
+		h|H) usage; exit 255;;
 	esac
 done
 

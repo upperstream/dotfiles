@@ -11,7 +11,7 @@ usage() {
 	cat <<-EOF
 	Usage:
 	$0 [-bnq] [-s set] [-x patterns] [[src_dir] dest_dir]
-	$0 -H|--help
+	$0 -H|-h|--help
 
 	src_dir
 	   : source directory where `home` directory containing dotfiles to be linked is.  Current directory is
@@ -26,7 +26,7 @@ usage() {
 	   : install specified set of tools; see below list for available sets
 	-x patterns
 	   : exclude list separated by colon (\`:')
-	-H|--help
+	-H|-h|--help
 	   : print this help summary and exit
 
 	Available sets are:
@@ -69,14 +69,14 @@ sets=""
 
 test "$1" = "--help" && { usage; exit 255; }
 
-while getopts bnqs:x:H opt; do
+while getopts bhnqs:x:H opt; do
 	case $opt in
-	b) backup_dir=.dotfiles.d/backups/`date +%Y%m%dT%H%M%S`;;
-	n) print_only=1;;
-	q) quiet_mode=1;;
-	s) sets=`printf "$sets\n$OPTARG"`;;
-	x) excludes=$OPTARG;;
-	H) usage; exit 255;;
+	b)   backup_dir=.dotfiles.d/backups/`date +%Y%m%dT%H%M%S`;;
+	n)   print_only=1;;
+	q)   quiet_mode=1;;
+	s)   sets=`printf "$sets\n$OPTARG"`;;
+	x)   excludes=$OPTARG;;
+	h|H) usage; exit 255;;
 	esac
 done
 
