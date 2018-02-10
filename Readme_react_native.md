@@ -16,6 +16,7 @@ This includes the following tools:
 * [js3-mode](https://github.com/thomblake/js3-mode)
 * [Node.js](https://nodejs.org/en/)
 * [nodebrew](https://github.com/hokaccha/nodebrew)
+* [react-native-cli](https://www.npmjs.com/package/react-native-cli)
 * [Tern](http://ternjs.net/), tern-mode, and tern-auto-complete
 * [Watchman](https://facebook.github.io/watchman/)
 * [XDE](https://github.com/expo/xde)

@@ -355,6 +355,7 @@ EOF
 	has node || install_node || report_error
 	has create-react-native-app || \
 		$acquire_root_privilege npm install -g create-react-native-app || report_error
+	has react-native || $acquire_root_privilege npm install -g react-native-cli || report_error
 	has exp || install_exp || reprot_error
 	has watchman || install_watchman || report_error
 	has tern || $acquire_root_privilege npm install -g tern || report_error
