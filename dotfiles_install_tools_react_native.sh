@@ -54,8 +54,7 @@ install_node() {
 				install gmake && \
 				install node6 && \
 				if [ ! -f /usr/ports/Makefile ]; then
-					fetch -o - http://ftp.jaist.ac.jp/pub/FreeBSD/releases/amd64/amd64/11.1-RELEASE/ports.txz | \
-						sudo tar zxpf - -C /
+					$sudo tar -zxpf `download_distfile ports.txz http://ftp.jaist.ac.jp/pub/FreeBSD/releases/amd64/amd64/11.1-RELEASE/ports.txz` -C /
 				fi && \
 				(install_package gmake && \
 				cd /usr/ports/www/npm3 && \
@@ -79,7 +78,11 @@ install_node() {
 				install_package nodejs-8.4.0nb1 && \
 				$sudo npm install -g npm@4
 			else
-				{ has cc || download `sed -n 's:^PKG_PATH=\(.*\)/pkgsrc/.*$:\1:p' /etc/pkg_install.conf`/NetBSD/NetBSD-`uname -r`/`uname -m`/binary/sets/comp.tgz | $sudo tar zxpf - -C /; } && \
+				if ! has cc; then
+					compiler_url=`sed -n 's:^PKG_PATH=\(.*\)/pkgsrc/.*$:\1:p' /etc/pkg_install.conf`/NetBSD/NetBSD-`uname -r`/`uname -m`/binary/sets/comp.tgz
+					$sudo tar -zxpf `download_distfile comp.tgz $compiler_url` -C / && \
+					unset compiler_url
+				fi
 				install gmake libexecinfo && \
 				CC=cc CXX=c++ nodebrew install $node_version && \
 				nodebrew use $node_version
@@ -153,8 +156,9 @@ install_watchman() {
 			install watchman
 			;;
 		Linux)
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
-				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			if [ ! -d /tmp/watchman-4.9.0 ]; then
+				tar -zxf `download_distfile watchman-4.9.0.tar.gz https://github.com/facebook/watchman/archive/v4.9.0.tar.gz` -C /tmp
+			fi && \
 			(cd /tmp/watchman-* && \
 			autogen_watchman && \
 			./configure --without-python --without-pcre && \
@@ -163,8 +167,9 @@ install_watchman() {
 			;;
 		OpenBSD)
 			echo "$0: Error: Watchman does not support OpenBSD" 1>&2; return 1
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
-				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
+			if [ ! -d /tmp/watchman-4.9.0 ]; then
+				tar -zxf `download_distfile watchman-4.9.0.tar.gz https://github.com/facebook/watchman/archive/v4.9.0.tar.gz` -C /tmp
+			fi && \
 			(cd /tmp/watchman-* && \
 			autogen_watchman && \
 			CC=cc CXX=c++ ./configure --without-python --without-pcre && \
@@ -236,9 +241,16 @@ has_exctags() {
 }
 
 install_from_source_global() {
-	compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | sed 's/^\([0-9]*\)\.\([0-9]*\)$/\1\2/'`.tgz
-	has gcc || { download $compiler_url | $sudo tar -zxpf - -C /; }
-	download http://tamacom.com/global/global-6.6.1.tar.gz | tar -zxf - -C /tmp
+	if ! has gcc; then
+		filename=comp`uname -r | sed 's/^\([0-9]*\)\.\([0-9]*\)$/\1\2/'`.tgz
+		compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/$filename
+		$sudo tar -zxpf `download_distfile $filename $compiler_url` -C / && \
+		unset filename && \
+		unset compiler_url
+	fi && \
+	if [ ! -d /tmp/global-6.6.1 ]; then
+		tar -zxf `download_distfile global-6.6.1.tar.gz http://tamacom.com/global/global-6.6.1.tar.gz` -C /tmp
+	fi && \
 	(cd /tmp/global-*; \
 	./configure --prefix=$HOME/.local --with-exuberant-ctags=`command -v ectags` && \
 	make && $sudo make install) && \
@@ -295,9 +307,10 @@ install_xde_prerequisites() {
 		OpenBSD)
 			echo "$0: Error: watchman does not support $os.  This error is not fatal." 1>&2
 			return 1
-			test -d `echo /tmp/watchman-* | cut -f1 -d' '` || \
-				download https://github.com/facebook/watchman/archive/v4.9.0.tar.gz | tar -zxf - -C /tmp
-			(cd /tmp/watchman-* && \
+			if [ ! -d /tmp/watchman-4.9.0 ]; then
+				tar -zxvf `download_distfile watchman-4.9.0.tar.gz https://github.com/facebook/watchman/archive/v4.9.0.tar.gz` -C /tmp
+			fi && \
+			(cd /tmp/watchman-4.9.0 && \
 			if [ ! -f .dotfiles.patched ]; then
 				patch -p1 <<-EOF
 					diff -u watchman-4.9.0_orig/log.cpp watchman-4.9.0/log.cpp
@@ -331,10 +344,9 @@ install_xde() {
 			;;
 		Linux)
 			if [ ! -f `echo /tmp/xde-*.AppImage | cut -f1 -d' '` ]; then
-				{ has wget || install wget; } && \
-				(cd /tmp; wget https://github.com/expo/xde/releases/download/v2.22.1/xde-2.22.1-x86_64.AppImage)
-			fi && \
-			mv /tmp/xde-*.AppImage $HOME/.local/bin/ && chmod +x $HOME/.local/bin/xde-*.AppImage
+				download https://github.com/expo/xde/releases/download/v2.22.1/xde-2.22.1-x86_64.AppImage > $HOME/.local/bin/xde-2.22.1-x86_64.AppImage && \
+				chmod +x $HOME/.local/bin/xde-*.AppImage
+			fi
 			;;
 		*)
 			echo "$0: Error: XDE does not support $os.  This error is not fatal." 1>&2

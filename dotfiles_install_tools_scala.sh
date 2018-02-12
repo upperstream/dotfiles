@@ -48,8 +48,10 @@ install_sbt() {
 			;;
 		NetBSD|OpenBSD)
 			if ! has sbt; then
-				download https://github.com/sbt/sbt/releases/download/v1.0.4/sbt-1.0.4.tgz | \
-					tar -zxf - -C ~/.local && \
+				filename=sbt-1.0.4.tgz
+				download_distfile $filename https://github.com/sbt/sbt/releases/download/v1.0.4/$filename && \
+				tar -zxf $distfiles_dir/$filename -C ~/.local && \
+				unset filename
 				(cd ~/.local/bin; ln -sf ../sbt/bin/* .)
 			fi
 			;;
@@ -91,8 +93,10 @@ install_jdk() {
 			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | \
-					tr -d '.'`.tgz | $sudo tar -zxpf - -C /
+				filename=xbase`uname -r | tr -d '.'`.tgz
+				download_distfile $filename `cat /etc/installurl`/`uname -r`/`uname -m`/$filename && \
+				$sudo tar -zxpf $distfiles_dir/$filename -C /
+				unset filename
 			fi
 			install_package jdk && \
 			(cd ~/.local/bin; ln -sf /usr/local/jdk-1.8.0/bin/* .)

@@ -7,6 +7,11 @@ set -e
 #set -x
 
 dotfiles_dir=`dirname $0`
+modules_dir=$dotfiles_dir/modules
+
+local_dir=$HOME/.local
+dotfiles_home=$HOME/.dotfiles.d
+distfiles_dir=$dotfiles_home/distfiles
 
 usage() {
 	cat <<-EOF
@@ -111,6 +116,16 @@ determine_downloader() {
 	install wget && { echo "wget"; return 0; }
 }
 
+download_distfile() {
+	distfile=$distfiles_dir/$1
+	test -f $distfile || download $2 > $distfile
+	rc=$?
+	test $rc -eq 0 || return $rc
+	echo $distfile
+	unset distfile
+	return $rc
+}
+
 inspect_current_environment() {
 	cat <<-EOF
 	-----------------------------------------
@@ -126,6 +141,8 @@ EOF
 	downloader=`determine_downloader`
 	pip=`locate_pip` || true
 
+	echo "dotfiles_home=$dotfiles_home"
+	echo "dotfiles_dir=$dotfiles_dir"
 	echo "os=$os"
 	echo "distribution=$distribution"
 	echo "sudo=$sudo"
@@ -230,8 +247,10 @@ install_abduco() {
 			install_package dtach
 			;;
 		*)
-			download http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz | tar -zxf - -C /tmp && \
-			(cd /tmp/abduco-*; make && $sudo make install) && \
+			if [ ! -d /tmp/abduco-0.6 ]; then
+				tar -zxf `download_distfile abduco-0.6.tar.gz http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz` -C /tmp
+			fi && \
+			(cd /tmp/abduco-0.6 && make && $sudo make install) && \
 			rm -rf /tmp/abduco-*
 			;;
 	esac
@@ -265,8 +284,10 @@ install_dirstack() {
 				;;
 		esac
 	fi && \
-	download https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz | tar -zxf - -C /tmp || return 1
-	(cd /tmp/upperstream-dirstack-* && \
+	if [ ! -d `echo /tmp/upperstream-dirstack-* | cut -f1` ]; then
+		tar -zxf `download_distfile upperstream-dirstack-20171213.tar.gz https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz` -C /tmp
+	fi && \
+	(cd `echo /tmp/upperstream-dirstack-* | cut -f1` && \
 	printf "s/^M/# M/\n/# .*$os/ {N; s/\\\n# /\\\\\n/; }\ns:^PREFIX = /usr/local:PREFIX = \${HOME}/.local:" > config.sed && \
 	(rm config.mk && sed -f config.sed > config.mk) < config.mk && \
 	make install) && \
@@ -274,18 +295,23 @@ install_dirstack() {
 }
 
 install_from_source_dvtm() {
-	download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
-	(cd /tmp/dvtm-*; make && $sudo make install) && \
+	if [ ! -d /tmp/dvtm-0.15 ]; then
+		tar -zxf `download_distfile dvtm-0.15.tar.gz http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz` -C /tmp
+	fi && \
+	(cd /tmp/dvtm-0.15 && make && $sudo make install) && \
+	unset filename && \
 	rm -rf /tmp/dvtm-*
 }
 
 install_dvtm() {
 	case "$os" in
 		Darwin)
-			brew install ncurses
-			brew link --force ncurses
-			download http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz | tar -zxf - -C /tmp
-			(cd /tmp/dvtm-*; \
+			brew install ncurses && \
+			brew link --force ncurses && \
+			if [ ! -d /tmp/dvtm-0.15 ]; then
+				tar -zxf `download_distfile dvtm-0.15.tar.gz http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz` -C /tmp
+			fi && \
+			(cd /tmp/dvtm-0.15; \
 			(rm config.mk; sed '/^CPPFLAGS =/ s/-D_POSIX_C_SOURCE=[^ ]*//; s/-D_XOPEN_SOURCE[^ ]*//g' > config.mk) < config.mk && \
 			make && $sudo make install) && \
 			rm -rf /tmp/dvtm-*
@@ -320,7 +346,9 @@ install_dvtm() {
 }
 
 install_from_source_editorconfig() {
-	download https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz | tar -zxf - -C /tmp
+	if [ ! -d /tmp/editorconfig-core-c-0.12.1 ]; then
+		tar -zxf `download_distfile editorconfig-core-c-0.12.1.tar.gz https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz` -C /tmp
+	fi && \
 	(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && $sudo make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
 }
 
@@ -364,7 +392,13 @@ install_editorconfig() {
 			for t in cmake pcre; do
 				has $t || install_package $t
 			done
-			has gcc || download `cat /etc/installurl`/`uname -r`/`uname -m`/comp`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
+			if ! has gcc; then
+				filename=comp`uname -r | tr -d '.'`.tgz
+				compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/$filename
+				$sudo tar -zxpf `download_distfile $filename $compiler_url` -C / && \
+				unset filename
+				unset compiler_url
+			fi && \
 			install_from_source_editorconfig
 			;;
 		*)
@@ -474,8 +508,11 @@ __install_micro() {
 			linux64|netbsd64)
 				{ has stow || install_stow; } && \
 				{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
-				download https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz | tar -zxf - -C $HOME/.local/stow && \
-				{ mkdir -p $HOME/.local/stow/micro-1.3.4/bin && mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
+				if [ ! -d $local_dir/stow/micro-1.3.4 ]; then
+					tar -zxf `download_distfile micro-1.3.4-$1.tar.gz https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz` -C $HOME/.local/stow
+				fi && \
+				{ test -d $HOME/.local/stow/micro-1.3.4/bin || mkdir -p $HOME/.local/stow/micro-1.3.4/bin; } && \
+				{ test -f $HOME/.local/stow/micro-1.3.4/bin/micro || mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
 				(cd $HOME/.local/stow && stow micro-1.3.4)
 				;;
 			*)
@@ -551,8 +588,12 @@ install_xsel() {
 			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				download `cat /etc/installurl`/`uname -r`/`uname -m`/xbase`uname -r | tr -d '.'`.tgz | $sudo tar -zxpf - -C /
-			fi
+				filename=xbase`uname -r | tr -d '.'`.tgz
+				xbase_url=`cat /etc/installurl`/`uname -r`/`uname -m`/$filename
+				$sudo tar -zxpf `download_distfile $filename $xbase_url` -C / && \
+				unset filename && \
+				unset xbase_url
+			fi && \
 			install_package xsel
 			;;
 		*)
@@ -660,6 +701,7 @@ EOF
 }
 
 main() {
+	test -d $distfiles_dir || mkdir -p $distfiles_dir
 	if [ $prefer_binary_package -eq 1 ]; then
 		printf "Install binary package rather than compiling source code\n"
 	fi
