@@ -1,0 +1,28 @@
+# Environment for Java Development Kit
+case `uname` in
+	Darwin)
+		JAVA_HOME=/Library/Java/Home
+		;;
+	FreeBSD)
+		JAVA_HOME=/usr/local/openjdk8
+		;;
+	Linux)
+		name=`cat /etc/*release | grep -F "NAME="`
+		case $name in
+			*Alpine*) JAVA_HOME=/usr/lib/jvm/default-jvm;;
+			*Arch*)   JAVA_HOME=/usr/lib/jvm/default;;
+			*CentOS*) JAVA_HOME=/etc/alternatives/java_sdk;;
+			*Debian*) JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64;;
+			*Devuan*) JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64;;
+			*Ubuntu*) JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64;;
+		esac
+		;;
+	NetBSD)
+		JAVA_HOME=/usr/pkg/java/openjdk8
+		;;
+	OpenBSD)
+		JAVA_HOME=/usr/local/jdk-1.8.0
+		;;
+esac
+export JAVA_HOME
+PATH=$PATH:$JAVA_HOME/bin

@@ -45,6 +45,8 @@ tools with a leading `-s` option:
 
 * [`golang`](Readme_golang.md) - development environment with [Golang][]
   tools
+* [`jdk`](Readme_jdk.md) - development environment with either
+  [OpenJDK][] or [Oracle JDK][]
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
 * [`scala`](Readme_scala.md) - development environment with [Scala][]
@@ -69,6 +71,9 @@ distributions:
     "macOS High Sierra - Apple"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
+[OpenJDK]: http://openjdk.java.net/ "OpenJDK"
+[Oracle JDK]: http://www.oracle.com/technetwork/java/javase/overview/index.html
+    "Java SE | Oracle Technology Network | Oracle"
 [React Native]: https://facebook.github.io/react-native/
     "React Native &middot; A framework for building native apps using React"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"

@@ -58,74 +58,16 @@ install_sbt() {
 	esac
 }
 
-install_jdk() {
-	case "$os" in
-		Darwin)
-			install_package -c java
-			;;
-		FreeBSD)
-			install_package openjdk8
-			;;
-		Linux)
-			case "$distribution" in
-				Alpine)
-					alpine_enable_community_repo && \
-					linux_install_package openjdk8 && \
-					(cd /usr/bin && $sudo ln -sf /usr/lib/jvm/default-jvm/bin/* .)
-					;;
-				Arch)
-					linux_install_package jdk8-openjdk
-					;;
-				CentOS)
-					linux_install_package java-1.8.0-openjdk-devel
-					;;
-				Debian|Ubuntu)
-					linux_install_package openjdk-8-jdk-headless
-					;;
-				Devuan)
-					linux_install_package openjdk-7-jdk
-					;;
-			esac
-			;;
-		NetBSD)
-			install_package openjdk8 && \
-			(cd ~/.local/bin; ln -sf /usr/pkg/java/openjdk8/bin/* .)
-			;;
-		OpenBSD)
-			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
-				filename=xbase`uname -r | tr -d '.'`.tgz
-				download_distfile $filename `cat /etc/installurl`/`uname -r`/`uname -m`/$filename && \
-				$sudo tar -zxpf $distfiles_dir/$filename -C /
-				unset filename
-			fi
-			install_package jdk && \
-			(cd ~/.local/bin; ln -sf /usr/local/jdk-1.8.0/bin/* .)
-			;;
-	esac
-}
-
-install_java_source() {
-	case "$os" in
-		Linux)
-			case "$distribution" in
-				Arch)          linux_install_package openjdk8-src;;
-				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
-				Debian|Ubuntu) linux_install_package openjdk-8-source;;
-				Devuan)        linux_install_package openjdk-7-source;;
-			esac
-			;;
-	esac
-}
-
 install_tools_scala() {
+	if [ "$os" = "Darwin" ] || ! has javac; then
+		. $dotfiles_dir/dotfiles_install_tools_jdk.sh && install_tools_jdk || report_error
+	fi
 	cat <<-EOF
 	-----------------------------------------
 	Installing tools for Scala
 	-----------------------------------------
 EOF
 
-	has javac || install jdk || report_error
-	install java-source || report_error
 	has sbt || install sbt || report_error
 #	install scala scala-doc scala-mode-el
 }
