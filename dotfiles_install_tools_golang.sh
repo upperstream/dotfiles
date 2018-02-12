@@ -65,8 +65,7 @@ EOF
 	has gocode || go_install_package github.com/nsf/gocode || report_error
 	has gotags || go_install_package github.com/jstemmer/gotags || report_error
 	has joe || install joe || report_error
-	test -d $HOME/.emacs.d/lisp || mkdir -p $HOME/.emacs.d/lisp
-	if [ ! -f $HOME/.emacs.d/lisp/gotags.el ]; then
-		download https://raw.githubusercontent.com/craig-ludington/gotags-el/master/me-alpheus-gotags.el > $HOME/.emacs.d/lisp/gotags.el
+	if [ ! -f $lisp_dir/gotags.el ]; then
+		download https://raw.githubusercontent.com/craig-ludington/gotags-el/master/me-alpheus-gotags.el > $lisp_dir/gotags.el
 	fi
 }

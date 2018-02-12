@@ -12,6 +12,7 @@ modules_dir=$dotfiles_dir/modules
 local_dir=$HOME/.local
 dotfiles_home=$HOME/.dotfiles.d
 distfiles_dir=$dotfiles_home/distfiles
+lisp_dir=$HOME/.emacs.d/lisp
 
 usage() {
 	cat <<-EOF
@@ -143,6 +144,7 @@ EOF
 
 	echo "dotfiles_home=$dotfiles_home"
 	echo "dotfiles_dir=$dotfiles_dir"
+	echo "lisp_dir=$lisp_dir"
 	echo "os=$os"
 	echo "distribution=$distribution"
 	echo "sudo=$sudo"
@@ -702,6 +704,8 @@ EOF
 
 main() {
 	test -d $distfiles_dir || mkdir -p $distfiles_dir
+	test -d $lisp_dir || mkdir -p $lisp_dir
+
 	if [ $prefer_binary_package -eq 1 ]; then
 		printf "Install binary package rather than compiling source code\n"
 	fi
