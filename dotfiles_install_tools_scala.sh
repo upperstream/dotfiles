@@ -1,4 +1,4 @@
-# Script to set up Scalanenvironment
+# Script to set up Scala environment
 # Copyright (C) 2018 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
