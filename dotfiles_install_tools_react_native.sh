@@ -107,7 +107,7 @@ install_node() {
 install_exp() {
 	case "$os" in
 		OpenBSD)
-			echo "$0: Error: exp does not support $os.  This error is not fatal." 1>&2
+			echo "$0: Warning: exp does not support $os." 1>&2
 			;;
 		*)
 			$acquire_root_privilege npm install -g exp
@@ -265,7 +265,7 @@ install_global() {
 		Linux)
 			case "$distribution" in
 				Arch)
-					echo "$0: Error: Installing GNU GLOBAL on Arch Linux is not supported.  This error is not fatal." 1>&2
+					echo "$0: Warning: Installing GNU GLOBAL on Arch Linux is not supported." 1>&2
 					return 0
 					;;
 				CentOS)
@@ -305,8 +305,8 @@ install_xde_prerequisites() {
 			esac
 			;;
 		OpenBSD)
-			echo "$0: Error: watchman does not support $os.  This error is not fatal." 1>&2
-			return 1
+			echo "$0: Warning: watchman does not support $os." 1>&2
+			return 0
 			if [ ! -d /tmp/watchman-4.9.0 ]; then
 				tar -zxvf `download_distfile watchman-4.9.0.tar.gz https://github.com/facebook/watchman/archive/v4.9.0.tar.gz` -C /tmp
 			fi && \
@@ -349,7 +349,7 @@ install_xde() {
 			fi
 			;;
 		*)
-			echo "$0: Error: XDE does not support $os.  This error is not fatal." 1>&2
+			echo "$0: Warning: XDE does not support $os." 1>&2
 			;;
 	esac
 }
