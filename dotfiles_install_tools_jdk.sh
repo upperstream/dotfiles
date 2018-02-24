@@ -16,6 +16,19 @@ install_auto_java_complete() {
 	(cd $HOME/.emacs.d && ln -sf auto-java-complete-0.2.9 auto-java-complete)
 }
 
+download_jdk() {
+	download_url=http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.tar.gz && \
+	if [ ! -f $distfiles_dir/jdk-8u162-linux-x64.tar.gz ]; then
+		has wget || has curl || install wget || install curl && \
+		if has wget; then
+			wget -O $distfiles_dir/jdk-8u162-linux-x64.tar.gz --header "Cookie: oraclelicense=accept-securebackup-cookie" $download_url
+		elif has curl; then
+			curl -L -H "Cookie: oraclelicense=accept-securebackup-cookie" $download_url > $distfiles_dir/jdk-8u162-linux-x64.tar.gz
+		fi
+	fi && \
+	echo "$distfiles_dir/jdk-8u162-linux-x64.tar.gz"
+}
+
 install_jdk() {
 	case "$os" in
 		Darwin)
