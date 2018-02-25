@@ -107,7 +107,7 @@ install_node() {
 install_exp() {
 	case "$os" in
 		OpenBSD)
-			echo "$0: Warning: exp does not support $os." 1>&2
+			echo "$0: Warning: Installing exp on OpenBSD is not supported." 1>&2
 			;;
 		*)
 			$acquire_root_privilege npm install -g exp
@@ -166,7 +166,7 @@ install_watchman() {
 			rm -rf /tmp/watchman-*
 			;;
 		OpenBSD)
-			echo "$0: Error: Watchman does not support OpenBSD" 1>&2; return 1
+			echo "$0: Warning: Installing Watchman on OpenBSD is not supported." 1>&2; return 0
 			if [ ! -d /tmp/watchman-4.9.0 ]; then
 				tar -zxf `download_distfile watchman-4.9.0.tar.gz https://github.com/facebook/watchman/archive/v4.9.0.tar.gz` -C /tmp
 			fi && \
