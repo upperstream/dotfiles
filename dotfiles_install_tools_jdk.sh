@@ -29,6 +29,19 @@ download_jdk() {
 	echo "$distfiles_dir/jdk-8u162-linux-x64.tar.gz"
 }
 
+install_distribution_openjdk() {
+	{ test -d /usr/lib/jvm || $sudo mkdir -p /usr/lib/jvm; } && \
+	$sudo tar -zxf `download_distfile openjdk-9.0.4_linux-x64_bin.tar.gz https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz` -C /usr/lib/jvm/ && \
+	for f in /usr/lib/jvm/jdk-9.0.4/bin/*; do
+		name=`basename $f`
+		if [ -f /usr/lib/jvm/jdk-9.0.4/man/man1/$name.1 ]; then
+			$sudo update-alternatives --install /usr/bin/$name $name $f 1094 --slave /usr/share/man/man1/$name.1 $name.1 /usr/lib/jvm/jdk-9.0.4/man/man1/$name.1
+		else
+			$sudo update-alternatives --install /usr/bin/$name $name $f 1094
+		fi
+	done
+}
+
 install_jdk() {
 	case "$os" in
 		Darwin)
@@ -54,7 +67,11 @@ install_jdk() {
 					linux_install_package openjdk-8-jdk-headless
 					;;
 				Devuan)
-					linux_install_package openjdk-7-jdk
+					if [ $prefer_binary_package -eq 1 ]; then
+						linux_install_package openjdk-7-jdk
+					else
+						install_distribution_openjdk
+					fi
 					;;
 			esac
 			;;
@@ -75,14 +92,30 @@ install_jdk() {
 	esac
 }
 
+install_distribution_openjdk_source() {
+	{ has hg || install mercurial; } && \
+	{ test -d /usr/lib/jvm/jdk-9.0.4/src || $sudo mkdir -p /usr/lib/jvm/jdk-9.0.4/src; } && \
+	$sudo tar -zxf `download_distfile jdk9u-jdk-9.0.4+12.zip http://hg.openjdk.java.net/jdk-updates/jdk9u/jdk/archive/a779673ab57d.zip` -C /usr/lib/jvm/jdk-9.0.4/src
+}
+
 install_java_source() {
 	case "$os" in
 		Linux)
 			case "$distribution" in
-				Arch)          linux_install_package openjdk8-src;;
-				CentOS)        linux_install_package java-1.8.0-openjdk-src;;
-				Debian|Ubuntu) linux_install_package openjdk-8-source;;
-				Devuan)        linux_install_package openjdk-7-source;;
+				Arch)
+					linux_install_package openjdk8-src
+					;;
+				CentOS)
+					linux_install_package java-1.8.0-openjdk-src
+					;;
+				Debian|Ubuntu)
+					linux_install_package openjdk-8-source
+					;;
+				Devuan)
+					if [ $prefer_binary_package -eq 1 ]; then
+						linux_install_package openjdk-7-source
+					fi
+					;;
 			esac
 			;;
 	esac
