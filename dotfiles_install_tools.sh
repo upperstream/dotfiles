@@ -434,8 +434,8 @@ install_emacs() {
 			install_package emacs
 			;;
 		OpenBSD)
-			$sudo pkg_delete emacs-25.3-no_x11 || true
-			install_package emacs-25.3-gtk2
+			$sudo pkg_delete emacs--no_x11 || true
+			install_package emacs--gtk2
 			;;
 		*)
 			install_package -c emacs
@@ -467,8 +467,8 @@ install_emacs_nox11() {
 			install_package emacs-nox11
 			;;
 		OpenBSD)
-			$sudo pkg_delete emacs-25.3-gtk2 || true
-			install_package emacs-25.3-no_x11
+			$sudo pkg_delete emacs--gtk2 || true
+			install_package emacs--no_x11
 			;;
 		*)
 			install_package emacs-nox11
