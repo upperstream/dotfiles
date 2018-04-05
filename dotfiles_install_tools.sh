@@ -272,14 +272,11 @@ install_cdiff() {
 
 install_dirstack() {
 	if [ "$os" = "Linux" ]; then
+		{ has make || install_package make; } && \
 		case "$distribution" in
 			Alpine)
 				alpine_enable_edge_repos && \
-				{ has mandb || install_package man-db; } && \
-				{ has make || install_package make; }
-				;;
-			Arch)
-				has make || install_package make
+				{ has mandb || install_package man-db; }
 				;;
 			Ubuntu)
 				has mandb || install_package man-db
