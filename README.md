@@ -12,7 +12,7 @@ The following command installs some tools for your convenience:
 When an option `-x` is specified, additional tools for X Window System
 will be installed as well.  Note that this may install X Window System
 as a part of dependencies.
-Execute `./dotfiles_link_files -H` to learn more options.
+Execute `./dotfiles_link_files.sh -H` to learn more options.
 
 Please note that you should not invoke the script with the root
 privilege.  The script automatically asks for the root privilege when
@@ -92,10 +92,10 @@ Executing the script with `-n` option does nothing but merely prints
 what will be done.
 
 This script supports `-s` option to set up symbolic links for
-additional set of tools.  See the above description above for
+additional set of tools.  See the description above for
 `dotfiles_install_tools.sh` for details.
 
-Execute `./dotfiles_link_files -H` to learn more options.
+Execute `./dotfiles_link_files.sh -H` to learn more options.
 
 
 ## Licensing
