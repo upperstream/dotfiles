@@ -414,7 +414,7 @@ install_emacs() {
 			install_package -c emacs
 			;;
 		FreeBSD)
-			install_package emacs25
+			install_package emacs || install_package emacs25
 			;;
 		Linux)
 			case "$distribution" in
@@ -447,7 +447,7 @@ install_emacs_nox11() {
 			install_package emacs
 			;;
 		FreeBSD)
-			install_package emacs-nox11
+			install_package emacs-nox || install_package emacs-nox11
 			;;
 		Linux)
 			case "$distribution" in
