@@ -2,7 +2,7 @@ test -f /etc/ksh.kshrc && . /etc/ksh.kshrc
 
 set -o emacs
 
-case $KSH_VERSION in
+case "$KSH_VERSION" in
 Version\ AJM\ 93*)
 	# echo KSH93
 	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
@@ -31,3 +31,5 @@ Version\ AJM\ 93*)
 	;;
 esac
 export PS1
+
+test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh

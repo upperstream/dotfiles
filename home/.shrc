@@ -16,3 +16,5 @@ if set -o | grep -F emacs > /dev/null; then
 elif set -o | grep -F vi > /dev/null; then
 	set -o vi
 fi
+
+test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
