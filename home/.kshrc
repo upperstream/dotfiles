@@ -17,12 +17,13 @@ Version\ AJM\ 93*)
 	;;
 *)
 	# echo Other KSH variants
-	hostname=`hostname | sed 's/\..*//'`
-	if [ -z "$hostname" ]; then
+	_hostname=`hostname | sed 's/\..*//'`
+	if [ -z "$_hostname" ]; then
 		PS1="`logname`"
 	else
 		PS1="`logname`@$hostname"
 	fi
+	unset _hostname
 	case `id -u` in
 		0) PS1="${PS1}# ";;
 		*) PS1="${PS1}$ ";;

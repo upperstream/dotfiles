@@ -1,10 +1,12 @@
 test -f /etc/shrc && . /etc/shrc
-hostname=`hostname | sed 's/\..*//'`
-if [ -z "$hostname" ]; then
+_hostname=`hostname | sed 's/\..*//'`
+if [ -z "$_hostname" ]; then
 	PS1="`id -un`"
 else
 	PS1="`id -un`@$hostname"
 fi
+unset _hostname
+
 case $(id -u) in
 	0) PS1="${PS1}# ";;
 	*) PS1="${PS1}$ ";;
