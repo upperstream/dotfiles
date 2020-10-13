@@ -39,3 +39,4 @@ esac
 export PS1
 
 test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
+bind '^I'=complete
