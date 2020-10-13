@@ -12,8 +12,14 @@ Version\ AJM\ 93*)
 	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
 	;;
 @\(\#\)PD\ KSH*)
-	# echo OpenBSD
-	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	# Public Domain Korn Shell
+	if [ `uname -o` = "OpenBSD" ]; then
+		# echo Public Domain Korn Shell on OpenBSD
+		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	else
+		# echo Publib Domain Korn Shell on non-OpenBSD platform
+		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	fi
 	;;
 *)
 	# echo Other KSH variants
