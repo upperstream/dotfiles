@@ -507,12 +507,12 @@ __install_micro() {
 			linux64|netbsd64)
 				{ has stow || install_stow; } && \
 				{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
-				if [ ! -d $local_dir/stow/micro-1.3.4 ]; then
-					tar -zxf `download_distfile micro-1.3.4-$1.tar.gz https://github.com/zyedidia/micro/releases/download/v1.3.4/micro-1.3.4-$1.tar.gz` -C $HOME/.local/stow
+				if [ ! -d $local_dir/stow/micro-2.0.8 ]; then
+					tar -zxf `download_distfile micro-2.0.8-$1.tar.gz https://github.com/zyedidia/micro/releases/download/v2.0.8/micro-2.0.8-$1.tar.gz` -C $HOME/.local/stow
 				fi && \
-				{ test -d $HOME/.local/stow/micro-1.3.4/bin || mkdir -p $HOME/.local/stow/micro-1.3.4/bin; } && \
-				{ test -f $HOME/.local/stow/micro-1.3.4/bin/micro || mv $HOME/.local/stow/micro-1.3.4/micro $HOME/.local/stow/micro-1.3.4/bin/; } && \
-				(cd $HOME/.local/stow && stow micro-1.3.4)
+				{ test -d $HOME/.local/stow/micro-2.0.8/bin || mkdir -p $HOME/.local/stow/micro-2.0.8/bin; } && \
+				{ test -f $HOME/.local/stow/micro-2.0.8/bin/micro || mv $HOME/.local/stow/micro-2.0.8/micro $HOME/.local/stow/micro-2.0.8/bin/; } && \
+				(cd $HOME/.local/stow && stow micro-2.0.8)
 				;;
 			*)
 				echo "$0: Error: Unsupported platform: `uname`" 1>&2
