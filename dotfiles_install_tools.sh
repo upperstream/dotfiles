@@ -76,7 +76,7 @@ linux_determine_distribution() {
 	case $name in
 		*Alpine*) echo "Alpine";;
 		*Arch*)   echo "Arch";;
-		*CentOS*) echo "CentOS";;
+		*CentOS*|*Amazon*) echo "CentOS";;
 		*Debian*) echo "Debian";;
 		*Devuan*) echo "Devuan";;
 		*Ubuntu*) echo "Ubuntu";;
