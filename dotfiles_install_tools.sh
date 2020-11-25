@@ -227,6 +227,14 @@ download() {
 	esac
 }
 
+require() {
+	package=${2:-$1}
+	command -v "$1" 2>/dev/null || install_package "$package"
+	rc=$?
+	unset package
+	return $rc
+}
+
 install_abduco() {
 	case "$os" in
 		Darwin|FreeBSD)
@@ -250,6 +258,7 @@ install_abduco() {
 			;;
 		*)
 			if [ ! -d /tmp/abduco-0.6 ]; then
+				require tar && \
 				tar -zxf `download_distfile abduco-0.6.tar.gz http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz` -C /tmp
 			fi && \
 			(cd /tmp/abduco-0.6 && make && $sudo make install) && \
@@ -284,6 +293,7 @@ install_dirstack() {
 		esac
 	fi && \
 	if [ ! -d `echo /tmp/upperstream-dirstack-* | cut -f1` ]; then
+		require tar && \
 		tar -zxf `download_distfile upperstream-dirstack-20171213.tar.gz https://bitbucket.org/upperstream/dirstack/get/20171213.tar.gz` -C /tmp
 	fi && \
 	(cd `echo /tmp/upperstream-dirstack-* | cut -f1` && \
@@ -295,6 +305,7 @@ install_dirstack() {
 
 install_from_source_dvtm() {
 	if [ ! -d /tmp/dvtm-0.15 ]; then
+		require tar && \
 		tar -zxf `download_distfile dvtm-0.15.tar.gz http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz` -C /tmp
 	fi && \
 	(cd /tmp/dvtm-0.15 && make && $sudo make install) && \
@@ -308,6 +319,7 @@ install_dvtm() {
 			brew install ncurses && \
 			brew link --force ncurses && \
 			if [ ! -d /tmp/dvtm-0.15 ]; then
+				require tar && \
 				tar -zxf `download_distfile dvtm-0.15.tar.gz http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz` -C /tmp
 			fi && \
 			(cd /tmp/dvtm-0.15; \
@@ -346,6 +358,7 @@ install_dvtm() {
 
 install_from_source_editorconfig() {
 	if [ ! -d /tmp/editorconfig-core-c-0.12.1 ]; then
+		require tar && \
 		tar -zxf `download_distfile editorconfig-core-c-0.12.1.tar.gz https://github.com/editorconfig/editorconfig-core-c/archive/v0.12.1.tar.gz` -C /tmp
 	fi && \
 	(cd /tmp/editorconfig-core-c-0.12.1 && cmake . && make && $sudo make install) && rm -rf /tmp/editorconfig-core-c-0.12.1
@@ -394,6 +407,7 @@ install_editorconfig() {
 			if ! has gcc; then
 				filename=comp`uname -r | tr -d '.'`.tgz
 				compiler_url=`cat /etc/installurl`/`uname -r`/`uname -m`/$filename
+				require tar && \
 				$sudo tar -zxpf `download_distfile $filename $compiler_url` -C / && \
 				unset filename
 				unset compiler_url
@@ -508,6 +522,7 @@ __install_micro() {
 				{ has stow || install_stow; } && \
 				{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
 				if [ ! -d $local_dir/stow/micro-2.0.8 ]; then
+					require tar && \
 					tar -zxf `download_distfile micro-2.0.8-$1.tar.gz https://github.com/zyedidia/micro/releases/download/v2.0.8/micro-2.0.8-$1.tar.gz` -C $HOME/.local/stow
 				fi && \
 				{ test -d $HOME/.local/stow/micro-2.0.8/bin || mkdir -p $HOME/.local/stow/micro-2.0.8/bin; } && \
@@ -589,6 +604,7 @@ install_xsel() {
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
 				filename=xbase`uname -r | tr -d '.'`.tgz
 				xbase_url=`cat /etc/installurl`/`uname -r`/`uname -m`/$filename
+				require tar && \
 				$sudo tar -zxpf `download_distfile $filename $xbase_url` -C / && \
 				unset filename && \
 				unset xbase_url
