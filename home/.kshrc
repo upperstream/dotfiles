@@ -10,6 +10,7 @@ Version\ AJM\ 93*)
 @\(\#\)MIRBSD\ KSH*)
 	# echo MKSH
 	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	bind '^I'=complete
 	;;
 @\(\#\)PD\ KSH*)
 	# Public Domain Korn Shell
@@ -20,6 +21,7 @@ Version\ AJM\ 93*)
 		# echo Publib Domain Korn Shell on non-OpenBSD platform
 		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
 	fi
+	bind '^I'=complete
 	;;
 *)
 	# echo Other KSH variants
@@ -34,9 +36,9 @@ Version\ AJM\ 93*)
 		0) PS1="${PS1}# ";;
 		*) PS1="${PS1}$ ";;
 	esac
+	bind '^I'=complete
 	;;
 esac
 export PS1
 
 test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
-bind '^I'=complete
