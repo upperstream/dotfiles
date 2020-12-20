@@ -85,6 +85,10 @@ linux_determine_distribution() {
 	return 0
 }
 
+linux_determine_distro_version() {
+	cat /etc/os-release | grep VERSION_ID | cut -f2 -d'"'
+}
+
 linux_determine_package_manager() {
 	for name in apk apt-get pacman yum; do
 		has $name && { echo $name; return 0; }
@@ -136,6 +140,7 @@ EOF
 	os=`determine_operating_system`
 	if [ "$os" = "Linux" ]; then
 		distribution=`linux_determine_distribution`
+		distro_version=`linux_determine_distro_version`
 		pkgmgr=`linux_determine_package_manager`
 	fi
 	sudo=`determine_sudo_command`
@@ -147,6 +152,7 @@ EOF
 	echo "lisp_dir=$lisp_dir"
 	echo "os=$os"
 	echo "distribution=$distribution"
+	echo "distro_version=$distro_version"
 	echo "sudo=$sudo"
 	echo "downloader=$downloader"
 	echo "pkgmgr=$pkgmgr"
