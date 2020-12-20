@@ -63,8 +63,12 @@ install_jdk() {
 				CentOS)
 					linux_install_package java-1.8.0-openjdk-devel
 					;;
-				Debian|Ubuntu)
-					linux_install_package openjdk-8-jdk-headless
+				Debian)
+					if [ "$distro_version" -ge 10 ]; then
+						linux_install_package default-jdk-headless
+					else
+						linux_install_package openjdk-8-jdk-headless
+					fi
 					;;
 				Devuan)
 					if [ $prefer_binary_package -eq 1 ]; then
@@ -72,6 +76,9 @@ install_jdk() {
 					else
 						install_distribution_openjdk
 					fi
+					;;
+				Ubuntu)
+					linux_install_package openjdk-8-jdk-headless
 					;;
 			esac
 			;;
@@ -108,13 +115,20 @@ install_java_source() {
 				CentOS)
 					linux_install_package java-1.8.0-openjdk-src
 					;;
-				Debian|Ubuntu)
-					linux_install_package openjdk-8-source
+				Debian)
+					if [ "$distro_version" -ge 10 ]; then
+						linux_install_package openjdk-11-source
+					else
+						linux_install_package openjdk-8-source
+					fi
 					;;
 				Devuan)
 					if [ $prefer_binary_package -eq 1 ]; then
 						linux_install_package openjdk-7-source
 					fi
+					;;
+				Ubuntu)
+					linux_install_package openjdk-8-source
 					;;
 			esac
 			;;
