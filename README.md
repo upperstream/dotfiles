@@ -108,4 +108,4 @@ See [LICENSE.txt](LICENSE.txt) file for details.
 
 - - -
 
-Copyright &copy; 2017, 2018 Upperstream Software.
+Copyright &copy; 2017-2020 Upperstream Software.
