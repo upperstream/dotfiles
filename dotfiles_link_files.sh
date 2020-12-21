@@ -1,6 +1,6 @@
 #!/bin/sh
 # Create symbolic links to dot files.
-# Copyright (C) 2017 Upperstream Software.
+# Copyright (C) 2017, 2018, 2020 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
 #set -e
@@ -143,11 +143,24 @@ link_files() {
 	done
 }
 
-echo link files from $src_dir to $dest_dir
+link_files_in_set() {
+	_sets_dir=$1
+	_set=$2
+	_dest_dir=$3
+	echo "Create links in $_dest_dir to $_sets_dir/$_set"
+	link_files "$_sets_dir"/"$_set" "$_dest_dir"
+	if [ -f "$_sets_dir"/"$_set".dependencies ]; then
+		while read -r d; do
+			(link_files_in_set "$_sets_dir" "$d" "$_dest_dir")
+		done < "$_sets_dir"/"$_set".dependencies
+	fi
+}
 
-link_files $src_dir $dest_dir
+echo "Create links in $dest_dir to $src_dir"
+
+link_files $src_dir "$dest_dir"
 for s in $sets; do
-	if [ -d $src_dir/../sets/$s ]; then
-		link_files $src_dir/../sets/$s $dest_dir
+	if [ -d $src_dir/../sets/"$s" ]; then
+		link_files_in_set $src_dir/../sets "$s" "$dest_dir"
 	fi
 done
