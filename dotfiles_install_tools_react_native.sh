@@ -68,6 +68,7 @@ install_node() {
 				(install_package gmake && \
 				cd /usr/ports/www/npm3 && \
 				$sudo make -DBATCH install clean)
+				acquire_root_privilege="$sudo"
 			else
 				install gmake libexecinfo && \
 				CC=cc CXX=c++ nodebrew install $node_version && \
@@ -85,7 +86,7 @@ install_node() {
 			fi
 			if [ $prefer_binary_package -eq 1 -o true ]; then
 				install_package nodejs-8.4.0nb1 && \
-				$sudo npm install -g npm@4
+				$acquire_root_privilege npm install -g npm@4
 			else
 				if ! has cc; then
 					compiler_url=`sed -n 's:^PKG_PATH=\(.*\)/pkgsrc/.*$:\1:p' /etc/pkg_install.conf`/NetBSD/NetBSD-`uname -r`/`uname -m`/binary/sets/comp.tgz
@@ -373,7 +374,6 @@ install_tools_react_native() {
 EOF
 
 	acquire_root_privilege=""
-	test $prefer_binary_package -eq 1 && acquire_root_privilege=$sudo
 	has nodebrew || install_nodebrew || report_error
 	has node || install_node || report_error
 	has create-react-native-app || \
