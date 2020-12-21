@@ -12,6 +12,7 @@ the following tools:
 * [sbt-mode](http://ensime.github.io/editors/emacs/sbt-mode/)
 * [scala-mode](http://ensime.github.io/editors/emacs/scala-mode/)
 
+Depending [JDK](Readme_jdk.md) tools will be automatically installed.
 - - -
 
-Copyright &copy; 2018 Upperstream Software.
+Copyright &copy; 2018, 2020 Upperstream Software.
