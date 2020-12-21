@@ -47,6 +47,7 @@ tools with a leading `-s` option:
   tools
 * [`jdk`](Readme_jdk.md) - development environment with either
   [OpenJDK][] or [Oracle JDK][]
+* [`nodejs`](Readme_nodejs.md) - development environment with [Node.js][] tools
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
 * [`scala`](Readme_scala.md) - development environment with [Scala][]
@@ -70,6 +71,7 @@ distributions:
 [macOS]: https://www.apple.com/lae/macos/high-sierra/
     "macOS High Sierra - Apple"
 [NetBSD]: https://www.netbsd.org/ "The NetBSD Project"
+[Node.js]: https://nodejs.org/ "Node.js"
 [OpenBSD]: https://www.openbsd.org/ "OpenBSD"
 [OpenJDK]: http://openjdk.java.net/ "OpenJDK"
 [Oracle JDK]: http://www.oracle.com/technetwork/java/javase/overview/index.html
