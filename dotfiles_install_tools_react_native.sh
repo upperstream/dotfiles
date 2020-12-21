@@ -1,6 +1,9 @@
 # Script to setp up React Native environment
-# Copyright (C) 2018 Upperstream Software.
+# Copyright (C) 2018, 2020 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
+
+# $(...) notation to invoke a subshell is not universal
+# shellcheck disable=SC2006
 
 react_native_describe_module() {
 	cat <<-EOF
@@ -21,7 +24,13 @@ install_nodebrew() {
 	return $rc
 }
 
-default_node_version=7.10.1
+get_nodejs_lts_versions() {
+	download https://nodejs.org/dist/index.tab | \
+	awk 'BEGIN { FS = "\t" } (NR > 1 && $10 != "-") { print $1, $10 }' | \
+	sed 's/^v\([0-9][0-9]*\)\.\([0-9][0-9]*\).\([0-9][0-9]*\) \(.*\)/\1 \2 \3 \4/' | \
+	sort -nr -k1 -k2 -k3 | \
+	awk '{ if ($1 != prev_major) { prev_major = $1; printf("v%d.%d.%d\t%s\n", $1, $2, $3, $4); } }'
+}
 
 install_node_dependencies() {
 	case "$os" in
@@ -41,7 +50,7 @@ install_node_dependencies() {
 }
 
 install_node() {
-	node_version=${1:-$default_node_version}
+	node_version=${1:-`get_nodejs_lts_versions | head -n1 | cut -f1`}
 	install_node_dependencies && \
 	case "$os" in
 		Darwin)
