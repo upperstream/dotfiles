@@ -14,7 +14,7 @@ Version\ AJM\ 93*)
 	;;
 @\(\#\)PD\ KSH*)
 	# Public Domain Korn Shell
-	if [ `uname -o` = "OpenBSD" ]; then
+	if [ `uname -s` = "OpenBSD" ]; then
 		# echo Public Domain Korn Shell on OpenBSD
 		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
 	else
