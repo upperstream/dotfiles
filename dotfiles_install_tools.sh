@@ -75,8 +75,9 @@ linux_determine_distribution() {
 	name=`cat /etc/*release | grep -F "NAME="`
 	case $name in
 		*Alpine*) echo "Alpine";;
+		*Amazon*) echo "Amazon";;
 		*Arch*)   echo "Arch";;
-		*CentOS*|*Amazon*) echo "CentOS";;
+		*CentOS*) echo "CentOS";;
 		*Debian*) echo "Debian";;
 		*Devuan*) echo "Devuan";;
 		*Ubuntu*) echo "Ubuntu";;
@@ -241,6 +242,15 @@ require() {
 	return $rc
 }
 
+install_from_source_abduco() {
+	if [ ! -d /tmp/abduco-0.6 ]; then
+		require tar && \
+		tar -zxf `download_distfile abduco-0.6.tar.gz http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz` -C /tmp
+	fi && \
+	(cd /tmp/abduco-0.6 && make && $sudo make install) && \
+	rm -rf /tmp/abduco-*
+}
+
 install_abduco() {
 	case "$os" in
 		Darwin|FreeBSD)
@@ -250,6 +260,9 @@ install_abduco() {
 			case "$distribution" in
 				Alpine)
 					alpine_enable_edge_repos && linux_install_package abduco
+					;;
+				Amazon)
+					install_from_source_abduco
 					;;
 				Debian|Devuan)
 					linux_install_package dtach
@@ -263,12 +276,7 @@ install_abduco() {
 			install_package dtach
 			;;
 		*)
-			if [ ! -d /tmp/abduco-0.6 ]; then
-				require tar && \
-				tar -zxf `download_distfile abduco-0.6.tar.gz http://www.brain-dump.org/projects/abduco/abduco-0.6.tar.gz` -C /tmp
-			fi && \
-			(cd /tmp/abduco-0.6 && make && $sudo make install) && \
-			rm -rf /tmp/abduco-*
+			install_from_source_abduco
 			;;
 	esac
 }
@@ -342,7 +350,7 @@ install_dvtm() {
 					alpine_enable_community_repo && \
 					linux_install_package dvtm
 					;;
-				CentOS)
+				Amazon|CentOS)
 					linux_install_package ncurses-devel
 					has gcc || linux_install_package gcc
 					install_from_source_dvtm
@@ -384,15 +392,15 @@ install_editorconfig() {
 					alpine_enable_community_repo && \
 					linux_install_package editorconfig
 					;;
-				Arch)
-					linux_install_package editorconfig-core-c
-					;;
-				CentOS)
+				Amazon|CentOS)
 					for t in cmake pcre-devel; do
 						linux_install_package $t
 					done
 					has gcc || install gcc
 					install_from_source_editorconfig
+					;;
+				Arch)
+					linux_install_package editorconfig-core-c
 					;;
 				Debian|Devuan|Ubuntu)
 					linux_install_package editorconfig
@@ -439,6 +447,7 @@ install_emacs() {
 		Linux)
 			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
+				Amazon) linux_install_package emacs;;
 				Arch)   yes | $sudo pacman -Syu emacs;;
 				CentOS) linux_install_package emacs;;
 				Debian) linux_install_package emacs25;;
@@ -472,6 +481,7 @@ install_emacs_nox11() {
 		Linux)
 			case "$distribution" in
 				Alpine) alpine_enable_community_repo && linux_install_package emacs-nox;;
+				Amazon) linux_install_package emacs-nox;;
 				Arch)   yes | $sudo pacman -Syu emacs-nox;;
 				CentOS) linux_install_package emacs-nox;;
 				Debian) linux_install_package emacs25-nox;;
@@ -500,9 +510,29 @@ install_markdown() {
 			;;
 		Linux)
 			case "$distribution" in
-				Alpine) alpine_enable_community_repo && install_package markdown;;
-				CentOS) linux_install_package perl-Text-Markdown;;
-				*)      linux_install_package markdown;;
+				Alpine)
+					alpine_enable_community_repo && install_package markdown
+					;;
+				Amazon)
+					require perl
+					require unzip
+					require perl-Digest-MD5
+					if [ ! -d /tmp/Markdown_1.0.1 ]; then
+						unzip `download_distfile Markdown_1.0.1.zip https://daringfireball.net/projects/downloads/Markdown_1.0.1.zip` -d /tmp
+						(cd /tmp/Markdown_1.0.1 && \
+						mv Markdown.pl $HOME/.local/bin && \
+						chmod +x $HOME/.local/bin/Markdown.pl && \
+						mkdir -p ~/.local/doc/Markdown && \
+						mv *.text ~/.local/doc/Markdown/) && \
+						rm -rf /tmp/Markdown_1.0.1
+					fi
+					;;
+				CentOS)
+					linux_install_package perl-Text-Markdown
+					;;
+				*)
+					linux_install_package markdown
+					;;
 			esac
 			;;
 		*)
@@ -511,11 +541,25 @@ install_markdown() {
 	esac
 }
 
+install_from_source_stow() {
+	if [ ! -d "/tmp/stow-2.3.1" ]; then
+		require tar && \
+		require make && \
+		require gcc && \
+		tar -zxf `download_distfile stow-2.3.1.tar.gz http://ftp.gnu.org/gnu/stow/stow-2.3.1.tar.gz` -C /tmp
+		(cd /tmp/stow-2.3.1 && ./configure && make && $sudo make install) && rm -rf /tmp/stow-2.3.1
+	fi
+}
+
 install_stow() {
 	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		alpine_enable_community_repo
 	fi && \
-	install_package stow
+	if [ "$os" = "Linux" -a "$distribution" = "Amazon" ]; then
+		install_from_source_stow
+	else
+		install_package stow
+	fi
 }
 
 __install_micro() {
@@ -624,6 +668,20 @@ install_xsel() {
 	esac
 }
 
+install_mg() {
+	if [ "$os" = "Linux" -a "$distribution" = "Amazon" ]; then
+		if [ ! -d "/tmp/mg-6.8.1" ]; then
+			require tar && \
+			require make && \
+			require gcc && \
+			tar -zxf `download_distfile mg-6.8.1.tar.gz https://github.com/ibara/mg/releases/download/mg-6.8.1/mg-6.8.1.tar.gz` -C /tmp
+			(cd /tmp/mg-6.8.1 && ./configure && make && $sudo make install) && rm -rf /tmp/mg-6.8.1
+		fi
+	else
+		install_package mg
+	fi
+}
+
 install() {
 	for t in $@; do
 		case $t in
@@ -637,6 +695,7 @@ install() {
 			java-source)  install_java_source;;
 			jdk)          install_jdk;;
 			Markdown)     install_markdown;;
+			mg)           install_mg;;
 			micro)        install_micro;;
 			pip)          install_pip;;
 			sbt)          install_sbt;;

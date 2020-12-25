@@ -57,11 +57,11 @@ install_jdk() {
 					linux_install_package openjdk8 && \
 					(cd /usr/bin && $sudo ln -sf /usr/lib/jvm/default-jvm/bin/* .)
 					;;
+				Amazon|CentOS)
+					linux_install_package java-1.8.0-openjdk-devel
+					;;
 				Arch)
 					linux_install_package jdk8-openjdk
-					;;
-				CentOS)
-					linux_install_package java-1.8.0-openjdk-devel
 					;;
 				Debian)
 					if [ "$distro_version" -ge 10 ]; then
@@ -112,7 +112,7 @@ install_java_source() {
 				Arch)
 					linux_install_package openjdk8-src
 					;;
-				CentOS)
+				Amazon|CentOS)
 					linux_install_package java-1.8.0-openjdk-src
 					;;
 				Debian)

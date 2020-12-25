@@ -15,6 +15,9 @@ EOF
 }
 
 install_nodebrew() {
+	if [ "$os" = "Linux" -a "$distribution" = "Amazon" ]; then
+		require which
+	fi
 	case "$os" in
 		FreeBSD|Linux|Darwin|NetBSD|OpenBSD)
 			{ has wget || install wget; } && \
@@ -237,6 +240,9 @@ install_global() {
 			;;
 		Linux)
 			case "$distribution" in
+				Amazon)
+					install_from_source_global
+					;;
 				Arch)
 					echo "$0: Warning: Installing GNU GLOBAL on Arch Linux is not supported." 1>&2
 					return 0
