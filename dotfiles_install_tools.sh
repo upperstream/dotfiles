@@ -1,6 +1,6 @@
 #!/bin/sh
 # Install basic tools.
-# Copyright (C) 2017, 2018 Upperstream Software.
+# Copyright (C) 2017-2020 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
 set -e
@@ -121,7 +121,7 @@ determine_sudo_command() {
 }
 
 locate_pip() {
-	for name in pip pip2.7; do
+	for name in pip pip3.8 pip2.7; do
 		path=`command -v $name 2>/dev/null` && { echo $path; return 0; }
 	done
 	return 1
@@ -478,8 +478,8 @@ install_emacs() {
 			esac
 			;;
 		NetBSD)
-			$sudo $netbsd_pkg_delete emacs-nox11 || true
-			install_package emacs
+			$sudo $netbsd_pkg_delete emacs27-nox11 || true
+			install_package emacs27
 			;;
 		OpenBSD)
 			$sudo pkg_delete emacs--no_x11 || true
@@ -512,8 +512,8 @@ install_emacs_nox11() {
 			esac
 			;;
 		NetBSD)
-			$sudo $netbsd_pkg_delete emacs || true
-			install_package emacs-nox11
+			$sudo $netbsd_pkg_delete emacs27 || true
+			install_package emacs27-nox11
 			;;
 		OpenBSD)
 			$sudo pkg_delete emacs--gtk2 || true
@@ -661,7 +661,7 @@ install_pip() {
 			esac
 			;;
 		NetBSD)
-			install_package py27-pip
+			install_package py38-pip
 			;;
 		OpenBSD)
 			install_package py-pip
