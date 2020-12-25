@@ -117,7 +117,7 @@ determine_downloader() {
 	for name in curl wget; do
 		has $name && { echo $name; return 0; }
 	done
-	install curl && { echo "curl"; return 0; }
+	install curl && { echo "curl -L"; return 0; }
 	install wget && { echo "wget"; return 0; }
 }
 
