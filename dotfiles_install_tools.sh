@@ -565,11 +565,20 @@ install_markdown() {
 
 install_from_source_stow() {
 	if [ ! -d "/tmp/stow-2.3.1" ]; then
+		case "$os" in
+			*BSD)
+				_make=gmake
+				;;
+			*)
+				_make=make
+				;;
+		esac && \
 		require tar && \
-		require make && \
 		require gcc && \
+		require $_make && \
 		tar -zxf `download_distfile stow-2.3.1.tar.gz http://ftp.gnu.org/gnu/stow/stow-2.3.1.tar.gz` -C /tmp
-		(cd /tmp/stow-2.3.1 && ./configure && make && $sudo make install) && rm -rf /tmp/stow-2.3.1
+		(cd /tmp/stow-2.3.1 && ./configure && $_make && $sudo $_make install) && rm -rf /tmp/stow-2.3.1
+		unset _make
 	fi
 }
 
@@ -577,11 +586,21 @@ install_stow() {
 	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		alpine_enable_community_repo
 	fi && \
-	if [ "$os" = "Linux" -a "$distribution" = "Amazon" ]; then
-		install_from_source_stow
-	else
-		install_package stow
-	fi
+	case "$os" in
+		NetBSD)
+			install_from_source_stow
+			;;
+		Linux)
+			if [ "$distribution" = "Amazon" ]; then
+				install_from_source_stow
+			else
+				install_package stow
+			fi
+			;;
+		*)
+			install_package stow
+			;;
+	esac
 }
 
 __install_micro() {
