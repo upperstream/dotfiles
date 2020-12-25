@@ -1,5 +1,5 @@
 # Script to set up JDK environment
-# Copyright (C) 2018 Upperstream Software.
+# Copyright (C) 2018, 2020 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
 jdk_describe_module() {
@@ -83,8 +83,8 @@ install_jdk() {
 			esac
 			;;
 		NetBSD)
-			install_package openjdk8 && \
-			(cd ~/.local/bin; ln -sf /usr/pkg/java/openjdk8/bin/* .)
+			install_package openjdk11 && \
+			(cd ~/.local/bin; ln -sf /usr/pkg/java/openjdk11/bin/* .)
 			;;
 		OpenBSD)
 			if [ ! -f /usr/X11R6/lib/libX11.a ]; then
