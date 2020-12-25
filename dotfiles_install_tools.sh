@@ -97,6 +97,22 @@ linux_determine_package_manager() {
 	return 1
 }
 
+netbsd_determine_package_manager() {
+	if has pkgin; then
+		echo "pkgin -y install"
+	else
+		echo pkg_add
+	fi
+}
+
+netbsd_determine_pkg_delete() {
+	if has pkgin; then
+		echo "pkgin -y remove"
+	else
+		echo pkg_delete
+	fi
+}
+
 determine_sudo_command() {
 	for name in sudo doas; do
 		has $name && { echo $name; return 0; }
@@ -143,6 +159,9 @@ EOF
 		distribution=`linux_determine_distribution`
 		distro_version=`linux_determine_distro_version`
 		pkgmgr=`linux_determine_package_manager`
+	elif [ "$os" = "NetBSD" ]; then
+		pkgmgr=`netbsd_determine_package_manager`
+		netbsd_pkg_delete=`netbsd_determine_pkg_delete`
 	fi
 	sudo=`determine_sudo_command`
 	downloader=`determine_downloader`
@@ -157,6 +176,9 @@ EOF
 	echo "sudo=$sudo"
 	echo "downloader=$downloader"
 	echo "pkgmgr=$pkgmgr"
+	if [ "$os" = "NetBSD" ]; then
+		echo "netbsd_pkg_delete=$netbsd_pkg_delete"
+	fi
 	echo "pip=$pip"
 }
 
@@ -205,7 +227,7 @@ install_package() {
 			linux_install_package $@
 			;;
 		NetBSD)
-			$sudo pkg_add $@
+			$sudo $pkgmgr $@
 			;;
 		OpenBSD)
 			$sudo pkg_add $@
@@ -456,7 +478,7 @@ install_emacs() {
 			esac
 			;;
 		NetBSD)
-			$sudo pkg_delete emacs-nox11 || true
+			$sudo $netbsd_pkg_delete emacs-nox11 || true
 			install_package emacs
 			;;
 		OpenBSD)
@@ -490,7 +512,7 @@ install_emacs_nox11() {
 			esac
 			;;
 		NetBSD)
-			$sudo pkg_delete emacs || true
+			$sudo $netbsd_pkg_delete emacs || true
 			install_package emacs-nox11
 			;;
 		OpenBSD)
