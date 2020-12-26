@@ -25,6 +25,15 @@
   :ensure t
   :pin melpa-stable)
 
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.mdown\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+
 (setq exec-path-from-shell-arguments '("-i"))
 (exec-path-from-shell-initialize)
 
@@ -43,8 +52,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (yasnippet meghanada ensime exec-path-from-shell editorconfig use-package))))
+   '(yasnippet meghanada ensime exec-path-from-shell editorconfig use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
