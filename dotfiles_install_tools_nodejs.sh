@@ -48,8 +48,8 @@ install_node_dependencies() {
 			$sudo ln -sf /usr/pkg/bin/python2.7 /usr/pkg/bin/python
 			;;
 		OpenBSD)
-			install_package python-2.7.14 && \
-			$sudo ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
+			install_package python%3 && \
+			$sudo ln -sf `ls /usr/local/bin/python3* | sort -r | head -n1` /usr/local/bin/python
 			;;
 	esac
 }

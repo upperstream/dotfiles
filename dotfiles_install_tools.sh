@@ -664,7 +664,7 @@ install_pip() {
 			install_package py38-pip
 			;;
 		OpenBSD)
-			install_package py-pip
+			install_package py3-pip
 			;;
 		*)
 			{ has python || install python; } && \
