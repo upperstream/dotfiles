@@ -273,7 +273,9 @@ install_tools_nodejs() {
 EOF
 
 	acquire_root_privilege=""
-	has nodebrew || install_nodebrew || report_error
+	if [ "$os" != "OpenBSD" ]; then
+		has nodebrew || install_nodebrew || report_error
+	fi
 	has node || install_node "`get_nodejs_lts_versions | head -n1 | cut -f1`" || report_error
 	has tern || $acquire_root_privilege npm install -g tern || report_error
 	has_exctags || install_exctags || report_error
