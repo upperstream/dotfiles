@@ -21,7 +21,7 @@ case `uname` in
 		JAVA_HOME=/usr/pkg/java/openjdk8
 		;;
 	OpenBSD)
-		JAVA_HOME=/usr/local/jdk-1.8.0
+		JAVA_HOME=/usr/local/jdk-11
 		;;
 esac
 export JAVA_HOME

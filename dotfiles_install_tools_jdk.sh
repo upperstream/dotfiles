@@ -93,8 +93,7 @@ install_jdk() {
 				$sudo tar -zxpf $distfiles_dir/$filename -C /
 				unset filename
 			fi
-			install_package jdk && \
-			(cd ~/.local/bin; ln -sf /usr/local/jdk-1.8.0/bin/* .)
+			install_package jdk%11
 			;;
 	esac
 }
