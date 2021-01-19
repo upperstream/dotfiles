@@ -14,7 +14,7 @@ go_install_package() {
 }
 
 install_distribution_golang() {
-	tar -zxf `download_distfile go1.10.linux-amd64.tar.gz https://dl.google.com/go/go1.10.linux-amd64.tar.gz` -C $local_dir/ && \
+	tar -zxf `download_distfile go1.15.6.linux-amd64.tar.gz https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz` -C $local_dir/ && \
 	(cd $local_dir/bin && \
 	ln -sf $local_dir/go/bin/* .)
 }
