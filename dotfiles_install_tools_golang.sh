@@ -32,6 +32,13 @@ install_golang() {
 				Arch)
 					linux_install_package go
 					;;
+				Debian)
+					if [ $prefer_binary_package -eq 1 ]; then
+						linux_install_package golang
+					else
+						install_distribution_golang
+					fi
+					;;
 				Devuan)
 					if [ $prefer_binary_package -eq 1 ]; then
 						linux_install_package golang
