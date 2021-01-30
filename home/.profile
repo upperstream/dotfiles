@@ -13,7 +13,7 @@ elif command -v fortune 2>&1 >/dev/null; then
 fi
 
 case "$0" in
-	-ksh|-mksh)
+	-ksh*|-mksh)
 		ENV=$HOME/.kshrc
 		;;
 	-sh)
