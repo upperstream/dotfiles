@@ -647,7 +647,7 @@ install_pip() {
 		Linux)
 			case "$distribution" in
 				Alpine)
-					linux_install_package py2-pip
+					linux_install_package py3-pip
 					;;
 				CentOS)
 					linux_install_package python2-pip
