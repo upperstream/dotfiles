@@ -1,6 +1,6 @@
 #!/bin/sh
 # Install basic tools.
-# Copyright (C) 2017-2020 Upperstream Software.
+# Copyright (C) 2017-2021 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
 
 set -e

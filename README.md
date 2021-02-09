@@ -2,7 +2,6 @@
 
 Initial setup for tools and dot config files.
 
-
 ## Install tools
 
 The following command installs some tools for your convenience:
@@ -50,6 +49,7 @@ tools with a leading `-s` option:
 * [`nodejs`](Readme_nodejs.md) - development environment with [Node.js][] tools
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
+* [`rust`](Readme_rust.md) - development environment with [Rust][] tools
 * [`scala`](Readme_scala.md) - development environment with [Scala][]
   tools
 
@@ -64,7 +64,6 @@ distributions:
 * [Devuan GNU+Linux](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
-
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Golang]: https://golang.org/ "The Go Programming Language"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
@@ -78,6 +77,7 @@ distributions:
     "Java SE | Oracle Technology Network | Oracle"
 [React Native]: https://facebook.github.io/react-native/
     "React Native &middot; A framework for building native apps using React"
+[Rust]: https://www.rust-lang.org/ "Rust Programming Language"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
 
 
@@ -99,7 +99,6 @@ additional set of tools.  See the description above for
 
 Execute `./dotfiles_link_files.sh -H` to learn more options.
 
-
 ## Licensing
 
 Files in this project are provided under the [ISC License][].
@@ -110,4 +109,4 @@ See [LICENSE.txt](LICENSE.txt) file for details.
 
 - - -
 
-Copyright &copy; 2017-2020 Upperstream Software.
+Copyright &copy; 2017-2021 Upperstream Software.
