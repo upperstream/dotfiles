@@ -47,6 +47,7 @@ tools with a leading `-s` option:
 * [`jdk`](Readme_jdk.md) - development environment with either
   [OpenJDK][] or [Oracle JDK][]
 * [`nodejs`](Readme_nodejs.md) - development environment with [Node.js][] tools
+* [`python`](Readme_python.md) - development environment with [Python][] tools
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
 * [`rust`](Readme_rust.md) - development environment with [Rust][] tools
@@ -75,11 +76,11 @@ distributions:
 [OpenJDK]: http://openjdk.java.net/ "OpenJDK"
 [Oracle JDK]: http://www.oracle.com/technetwork/java/javase/overview/index.html
     "Java SE | Oracle Technology Network | Oracle"
+[Python]: https://www.python.org/ "Welcome to Python.org"
 [React Native]: https://facebook.github.io/react-native/
     "React Native &middot; A framework for building native apps using React"
 [Rust]: https://www.rust-lang.org/ "Rust Programming Language"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
-
 
 ## Create symbolic links to dotfiles
 
