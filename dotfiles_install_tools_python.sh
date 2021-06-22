@@ -49,5 +49,5 @@ EOF
 
 	has git || install git || report_error
 	has python3 || install_python3 || report_error
-	has pep8 || install_python_package rep3 || report_error
+	has pep8 || install_python_package pep8 || report_error
 }
