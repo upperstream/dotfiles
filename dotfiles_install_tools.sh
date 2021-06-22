@@ -323,8 +323,8 @@ install_dirstack() {
 				alpine_enable_edge_repos && \
 				{ has mandb || install_package man-db; }
 				;;
-			Ubuntu)
-				has mandb || install_package man-db
+			Amazon|Ubuntu)
+				require mandb man-db
 				;;
 		esac
 	fi && \
