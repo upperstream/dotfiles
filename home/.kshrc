@@ -2,24 +2,45 @@ test -f /etc/ksh.kshrc && . /etc/ksh.kshrc
 
 set -o emacs
 
+case "$TERM" in
+	xterm-color|*-256color) _coloured_prompt=yes;;
+esac
+
 case "$KSH_VERSION" in
 Version\ AJM\ 93*)
 	# echo KSH93
-	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	if [ "$_coloured_prompt" = yes ]; then
+		PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+	else
+		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	fi
 	;;
 @\(\#\)MIRBSD\ KSH*)
 	# echo MKSH
-	PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	if [ "$_coloured_prompt" = yes ]; then
+		PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+	else
+		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+	fi
 	bind '^I'=complete
 	;;
 @\(\#\)PD\ KSH*)
 	# Public Domain Korn Shell
+PS1=$(printf '\033[32m$(logname)@$(hostname)\033[00m$ ')
 	if [ `uname -s` = "OpenBSD" ]; then
 		# echo Public Domain Korn Shell on OpenBSD
-		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+		if [ "$_coloured_prompt" = yes]; then
+			PS1='$(printf "\033[32m$(logname_@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+		else
+			PS1='$(printf "$`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+		fi
 	else
 		# echo Publib Domain Korn Shell on non-OpenBSD platform
+		if [ "$_coloured_prompt" = yes ]; then
+		PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+		else
 		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+		fi
 	fi
 	bind '^I'=complete
 	;;
@@ -40,5 +61,6 @@ Version\ AJM\ 93*)
 	;;
 esac
 export PS1
+unset _coloured_prompt
 
 test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
