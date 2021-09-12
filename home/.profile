@@ -18,21 +18,23 @@ elif command -v fortune 2>&1 >/dev/null; then
 	fortune
 fi
 
-case "$0" in
-	-ksh*|-mksh)
+case "`echo ${0##*/} | sed 's/^-//'`" in
+	ksh*|mksh)
 		ENV=$HOME/.kshrc
 		;;
-	-sh)
+	sh)
 		ENV=$HOME/.shrc
 		;;
-	-ash)
+	ash)
 		ENV=$HOME/.shrc
 		;;
-	-dash)
+	dash)
 		ENV=$HOME/.shrc
 		;;
-	-bash)
+	bash)
 		ENV=$HOME/.bashrc
-		test -f $ENV && . $ENV
+		if [ -f $ENV ]; then
+			. $ENV
+		fi
 		;;
 esac
