@@ -257,11 +257,9 @@ download() {
 }
 
 require() {
-	package=${2:-$1}
-	command -v "$1" 2>/dev/null || install_package "$package"
-	rc=$?
-	unset package
-	return $rc
+	if ! command -v "$1" 2>/dev/null; then
+		install "$1"
+	fi
 }
 
 install_from_source_abduco() {
@@ -321,10 +319,10 @@ install_dirstack() {
 		case "$distribution" in
 			Alpine)
 				alpine_enable_edge_repos && \
-				{ has mandb || install_package man-db; }
+				require mandb
 				;;
 			Amazon|Ubuntu)
-				require mandb man-db
+				require mandb
 				;;
 		esac
 	fi && \
@@ -538,7 +536,7 @@ install_markdown() {
 				Amazon)
 					require perl
 					require unzip
-					require perl-Digest-MD5
+					install_package perl-Digest-MD5
 					if [ ! -d /tmp/Markdown_1.0.1 ]; then
 						unzip `download_distfile Markdown_1.0.1.zip https://daringfireball.net/projects/downloads/Markdown_1.0.1.zip` -d /tmp
 						(cd /tmp/Markdown_1.0.1 && \
@@ -709,6 +707,10 @@ install_xsel() {
 	esac
 }
 
+install_mandb() {
+	install_package man-db
+}
+
 install_mg() {
 	if [ "$os" = "Linux" -a "$distribution" = "Amazon" ]; then
 		if [ ! -d "/tmp/mg-6.8.1" ]; then
@@ -736,6 +738,7 @@ install() {
 			java-source)  install_java_source;;
 			jdk)          install_jdk;;
 			Markdown)     install_markdown;;
+			mandb)        install_mandb;;
 			mg)           install_mg;;
 			micro)        install_micro;;
 			pip)          install_pip;;
