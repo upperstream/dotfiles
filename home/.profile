@@ -1,9 +1,15 @@
 #set -x
 
-test -f $HOME/.environment && . $HOME/.environment
-test -f $HOME/.environment.`hostname` && . $HOME/.environment.`hostname`
+if [ -f $HOME/.environment ]; then
+	. $HOME/.environment
+fi
+if command -v hostname > /dev/null && [ -f $HOME/.environment.`hostname` ]; then
+	. $HOME/.environment.`hostname`
+fi
 for f in $HOME/.environment_*; do
-	test -f $f && . $f
+	if [ -f $f ]; then
+		. $f
+	fi
 done
 
 if [ `uname` = FreeBSD ]; then
