@@ -46,13 +46,17 @@ tools with a leading `-s` option:
   tools
 * [`jdk`](Readme_jdk.md) - development environment with either
   [OpenJDK][] or [Oracle JDK][]
-* [`nodejs`](Readme_nodejs.md) - development environment with [Node.js][] tools
-* [`python`](Readme_python.md) - development environment with [Python][] tools
+* [`nodejs`](Readme_nodejs.md) - development environment with
+  [Node.js][] tools
+* [`python`](Readme_python.md) - development environment with
+  [Python][] tools
 * [`react_native`](Readme_react_native.md) - development environment
   with [React Native][] tools
 * [`rust`](Readme_rust.md) - development environment with [Rust][] tools
 * [`scala`](Readme_scala.md) - development environment with [Scala][]
   tools
+* [`terraform`](Readme_terraform.md) - development environment with
+  [Terraform][]
 
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
@@ -81,6 +85,7 @@ distributions:
     "React Native &middot; A framework for building native apps using React"
 [Rust]: https://www.rust-lang.org/ "Rust Programming Language"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
+[Terraform]: https://www.terraform.io/ "Terraform by HashiCorp"
 
 ## Create symbolic links to dotfiles
 
