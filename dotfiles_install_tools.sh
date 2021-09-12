@@ -575,12 +575,15 @@ install_from_source_stow() {
 		require gcc && \
 		require $_make && \
 		tar -zxf `download_distfile stow-2.3.1.tar.gz http://ftp.gnu.org/gnu/stow/stow-2.3.1.tar.gz` -C /tmp
-		(cd /tmp/stow-2.3.1 && ./configure && $_make && $sudo $_make install) && rm -rf /tmp/stow-2.3.1
+		(cd /tmp/stow-2.3.1 && ./configure --prefix="$local_dir" && $_make && $_make install) && rm -rf /tmp/stow-2.3.1
 		unset _make
 	fi
 }
 
 install_stow() {
+	if [ "$prefer_binary_package" -eq 0 ]; then
+		install_from_source_stow
+	fi
 	if [ "$os" = "Linux" -a "$distribution" = "Alpine" ]; then
 		alpine_enable_community_repo
 	fi && \
@@ -608,7 +611,7 @@ __install_micro() {
 	else
 		case $1 in
 			linux64|netbsd64)
-				{ has stow || install_stow; } && \
+				require stow && \
 				{ test -d $HOME/.local/stow || mkdir -p $HOME/.local/stow; } && \
 				if [ ! -d $local_dir/stow/micro-2.0.8 ]; then
 					require tar && \

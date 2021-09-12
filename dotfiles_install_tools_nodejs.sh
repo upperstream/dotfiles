@@ -225,7 +225,7 @@ install_from_source_global() {
 	if [ ! -d /tmp/global-6.6.1 ]; then
 		tar -zxf "`download_distfile global-6.6.1.tar.gz http://tamacom.com/global/global-6.6.1.tar.gz`" -C /tmp
 	fi && \
-	{ has stow || install_stow; } && \
+	require stow && \
 	{ test -d "$HOME"/.local/stow || mkdir -p "$HOME"/.local/stow; } && \
 	(cd /tmp/global-*; \
 	./configure --prefix="$HOME"/.local --with-exuberant-ctags="`command -v ectags`" && \

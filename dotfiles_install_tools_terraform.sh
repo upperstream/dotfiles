@@ -10,7 +10,8 @@ EOF
 }
 
 install_terraform() {
-	require unzip
+	require unzip && \
+	require stow && \
 	case $os in
 		Darwin)
 			package=terraform_1.0.6_darwin_amd64.zip
