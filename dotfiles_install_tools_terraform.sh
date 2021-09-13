@@ -4,7 +4,7 @@
 
 terraform_describe_module() {
 	cat <<-EOF
-	teerraform:
+	terraform:
 	    install Terraform environment
 EOF
 }
