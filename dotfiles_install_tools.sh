@@ -746,6 +746,7 @@ install() {
 			micro)        install_micro;;
 			pip)          install_pip;;
 			sbt)          install_sbt;;
+			stow)         install_stow;;
 			xsel)         install_xsel;;
 			*)            install_package $t;;
 		esac
