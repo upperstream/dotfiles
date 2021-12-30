@@ -46,13 +46,14 @@ with_x11=0
 sets=""
 keep_going=0
 
-while getopts bhks:xH opt; do
+while getopts bhks:xH-: opt; do
 	case $opt in
 		b)   prefer_binary_package=1;;
 		k)   keep_going=1;;
 		s)   sets=`printf "$sets\n$OPTARG"`;;
 		x)   with_x11=1;;
 		h|H) usage; exit 255;;
+		-)   eval `echo "$OPTARG" | sed -e 's/^-//' -e 's/-/_/g'`;;
 	esac
 done
 
@@ -121,7 +122,7 @@ determine_sudo_command() {
 }
 
 locate_pip() {
-	for name in pip pip3.8 pip2.7; do
+	for name in pip3 pip pip3.8 pip2.7; do
 		path=`command -v $name 2>/dev/null` && { echo $path; return 0; }
 	done
 	return 1
@@ -651,10 +652,10 @@ install_pip() {
 					linux_install_package py3-pip
 					;;
 				CentOS)
-					linux_install_package python2-pip
+					linux_install_package python3-pip
 					;;
 				*)
-					if ! linux_install_package python-pip; then
+					if ! linux_install_package python3-pip; then
 						echo "$0: Error: Don't know how to install pip on $distribution" 1>&2
 						report_error
 					fi
