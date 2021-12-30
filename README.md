@@ -42,6 +42,7 @@ Tools for X Window System to be installed are:
 Additionally, the script can install the following sets of development
 tools with a leading `-s` option:
 
+* [`docker`](Readme_docker.md) - development environment with [Docker][]
 * [`golang`](Readme_golang.md) - development environment with [Golang][]
   tools
 * [`jdk`](Readme_jdk.md) - development environment with either
@@ -69,6 +70,8 @@ distributions:
 * [Devuan GNU+Linux](https://devuan.org/)
 * [Ubuntu](https://www.ubuntu.com/)
 
+[Docker]: https://www.docker.com/
+    "Empowering App Development for Developers | Docker"
 [FreeBSD]: https://www.freebsd.org/ "The FreeBSD Project"
 [Golang]: https://golang.org/ "The Go Programming Language"
 [Linux]: https://www.kernel.org/ "The Linux Kernel Archives"
