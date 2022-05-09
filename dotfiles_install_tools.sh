@@ -358,7 +358,7 @@ install_dvtm() {
 				tar -zxf `download_distfile dvtm-0.15.tar.gz http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz` -C /tmp
 			fi && \
 			(cd /tmp/dvtm-0.15; \
-			(rm config.mk; sed '/^CPPFLAGS =/ s/-D_POSIX_C_SOURCE=[^ ]*//; s/-D_XOPEN_SOURCE[^ ]*//g' > config.mk) < config.mk && \
+			(rm config.mk; sed '/^CPPFLAGS =/ s/-D_POSIX_C_SOURCE=[^ ]*//; s/-D_XOPEN_SOURCE=[^ ]*//g' > config.mk) < config.mk && \
 			make && $sudo make install) && \
 			rm -rf /tmp/dvtm-*
 			;;
