@@ -216,10 +216,10 @@ linux_install_package() {
 
 install_package() {
 	cask=""
-	test "$1" = "-c" && { cask="cask"; shift; }
+	test "$1" = "-c" && { cask="--cask"; shift; }
 	case "$os" in
 		Darwin)
-			brew $cask install $@
+			brew install $cask $@
 			;;
 		FreeBSD)
 			$sudo pkg install -y $@
@@ -493,7 +493,7 @@ install_emacs() {
 install_emacs_nox11() {
 	case "$os" in
 		Darwin)
-			brew cask uninstall emacs
+			brew uninstall --cask emacs
 			install_package emacs
 			;;
 		FreeBSD)
