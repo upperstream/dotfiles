@@ -1,6 +1,8 @@
 # Script to set up Golang environment
-# Copyright (C) 2018 Upperstream Software.
+# Copyright (C) 2018, 2023 Upperstream Software.
 # Provided under the ISC License.  See LICENSE.txt file for details.
+
+# shellcheck disable=SC2006,SC2148,SC2154
 
 golang_describe_module() {
 	cat <<-EOF
@@ -10,13 +12,14 @@ EOF
 }
 
 go_install_package() {
-	go get $@
+	_version="${2:-latest}"
+	go install "$1@$_version"
 }
 
 install_distribution_golang() {
-	tar -zxf `download_distfile go1.15.6.linux-amd64.tar.gz https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz` -C $local_dir/ && \
-	(cd $local_dir/bin && \
-	ln -sf $local_dir/go/bin/* .)
+	tar -zxf "`download_distfile go1.15.6.linux-amd64.tar.gz https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz`" -C "$local_dir"/ && \
+	(cd "$local_dir"/bin && \
+	ln -sf "$local_dir"/go/bin/* .)
 }
 
 install_golang() {
@@ -25,7 +28,7 @@ install_golang() {
 			install_package go
 			;;
 		Linux)
-			case $distribution in
+			case "$distribution" in
 				Alpine)
 					alpine_enable_edge_repos && linux_install_package libc-dev go
 					;;
@@ -33,14 +36,14 @@ install_golang() {
 					linux_install_package go
 					;;
 				Debian)
-					if [ $prefer_binary_package -eq 1 ]; then
+					if [ "$prefer_binary_package" -eq 1 ]; then
 						linux_install_package golang
 					else
 						install_distribution_golang
 					fi
 					;;
 				Devuan)
-					if [ $prefer_binary_package -eq 1 ]; then
+					if [ "$prefer_binary_package" -eq 1 ]; then
 						linux_install_package golang
 					else
 						install_distribution_golang
@@ -55,8 +58,8 @@ install_golang() {
 			if [ ! -x /usr/pkg/sbin/mozilla-rootcerts ]; then
 				install_package mozilla-rootcerts
 			fi && \
-			if [ ! -f `echo /etc/openssl/certs/mozilla-rootcert-* | cut -f1 -d' '` ]; then
-				$sudo /usr/pkg/sbin/mozilla-rootcerts install
+			if [ ! -f "`echo /etc/openssl/certs/mozilla-rootcert-* | cut -f1 -d' '`" ]; then
+				"$sudo" /usr/pkg/sbin/mozilla-rootcerts install
 			fi && \
 			install_package go
 			;;
@@ -80,12 +83,12 @@ EOF
 	has go || install_golang || report_error
 	GOPATH=$HOME/go
 	export GOPATH
-	test -d $GOPATH || mkdir -p $GOPATH
+	test -d "$GOPATH" || mkdir -p "$GOPATH"
 	PATH=$PATH:$GOPATH/bin
 	has gocode || go_install_package github.com/nsf/gocode || report_error
 	has gotags || go_install_package github.com/jstemmer/gotags || report_error
 	has joe || install joe || report_error
-	if [ ! -f $lisp_dir/gotags.el ]; then
-		download https://raw.githubusercontent.com/craig-ludington/gotags-el/master/me-alpheus-gotags.el > $lisp_dir/gotags.el
+	if [ ! -f "$lisp_dir"/gotags.el ]; then
+		download https://raw.githubusercontent.com/craig-ludington/gotags-el/master/me-alpheus-gotags.el > "$lisp_dir"/gotags.el
 	fi
 }
