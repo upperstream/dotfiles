@@ -38,3 +38,5 @@ case "`echo ${0##*/} | sed 's/^-//'`" in
 		fi
 		;;
 esac
+
+export ENV
