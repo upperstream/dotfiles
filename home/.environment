@@ -1,4 +1,10 @@
-PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/games
+if [ -d "$HOME/bin" ]; then
+	PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/.local/bin" ]; then
+	PATH="$HOME/.local/bin:$PATH"
+fi
+
 command -v python > /dev/null && PATH=$PATH:`python -m site --user-base`/bin
 export PATH HOME TERM
 
