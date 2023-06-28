@@ -18,9 +18,9 @@ Version\ AJM\ 93*)
 @\(\#\)MIRBSD\ KSH*)
 	# echo MKSH
 	if [ "$_coloured_prompt" = yes ]; then
-		PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+		PS1=$'\1\r\1\e[32m\1${LOGNAME:-${USERNAME:-$(logname)}}@${HOSTNAME:-$(hostname)}\1\e[00m\1:\1\e[34m\1$(if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi)\1\e[00m\1$ '
 	else
-		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+		PS1=$'${LOGNAME:-${USERNAME:-$(logname)}}@${HOSTNAME:-$(hostname)}:$(if [ x"${PWD#$HOME}" !!= x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi)$ '
 	fi
 	bind '^I'=complete
 	;;
