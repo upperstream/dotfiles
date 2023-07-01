@@ -471,9 +471,9 @@ install_emacs() {
 				Amazon) linux_install_package emacs;;
 				Arch)   yes | $sudo pacman -Syu emacs;;
 				CentOS) linux_install_package emacs;;
-				Debian) linux_install_package emacs25;;
+				Debian) linux_install_package emacs;;
 				Devuan) linux_install_package emacs;;
-				Ubuntu) linux_install_package emacs24;;
+				Ubuntu) linux_install_package emacs;;
 			esac
 			;;
 		NetBSD)
@@ -505,9 +505,9 @@ install_emacs_nox11() {
 				Amazon) linux_install_package emacs-nox;;
 				Arch)   yes | $sudo pacman -Syu emacs-nox;;
 				CentOS) linux_install_package emacs-nox;;
-				Debian) linux_install_package emacs25-nox;;
+				Debian) linux_install_package emacs-nox;;
 				Devuan) linux_install_package emacs-nox;;
-				Ubuntu) linux_install_package emacs24-nox;;
+				Ubuntu) linux_install_package emacs-nox;;
 			esac
 			;;
 		NetBSD)
