@@ -10,9 +10,9 @@ case "$KSH_VERSION" in
 Version\ AJM\ 93*)
 	# echo KSH93
 	if [ "$_coloured_prompt" = yes ]; then
-		PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[34m"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
+		PS1='$(printf "\033[32m%s@%s\033[00m:\033[34m%s\033[00m$ " "${LOGNAME:-${USERNAME:-$(logname)}}" "${HOSTNAME:-$(hostname)}" "$(if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi)")'
 	else
-		PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+		PS1='$(printf "%s@%s:%s$ " "${LOGNAME:-${USERNAME:-$(logname)}}" "${HOSTNAME:-$(hostname)}" "$(if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi)")'
 	fi
 	;;
 @\(\#\)MIRBSD\ KSH*)
