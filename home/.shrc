@@ -1,20 +1,25 @@
+# shellcheck disable=SC2006,SC2148
+# shellcheck disable=SC1091
 test -f /etc/shrc && . /etc/shrc
 _hostname=`hostname | sed 's/\..*//'`
 if [ -z "$_hostname" ]; then
-	PS1="`id -un`"
+	PS1="${LOGNAME:-${USERNAME:-`id -un`}}"
 else
-	PS1="`id -un`@$hostname"
+	PS1="${LOGNAME:-${USERNAME:-`id -un`}}@$_hostname"
 fi
 unset _hostname
 
-case $(id -u) in
+case `id -u` in
 	0) PS1="${PS1}# ";;
 	*) PS1="${PS1}$ ";;
 esac
-if set -o | grep -F emacs > /dev/null; then
-	set -o emacs
-elif set -o | grep -F vi > /dev/null; then
-	set -o vi
+if set -o > /dev/null 2>&1; then
+	if set -o | grep -F emacs > /dev/null; then
+		set -o emacs
+	elif set -o | grep -F vi > /dev/null; then
+		set -o vi
+	fi
 fi
 
-test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
+# shellcheck disable=SC1091
+test -f "$HOME/.local/bin/dirstack.sh" && . "$HOME/.local/bin/dirstack.sh"
