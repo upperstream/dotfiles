@@ -15,7 +15,7 @@ done
 
 if [ "`uname`" = FreeBSD ]; then
 	test -x /usr/bin/fortune && /usr/bin/fortune freebsd-tips
-elif type fortune >/dev/null 2>*1; then
+elif type fortune >/dev/null 2>&1; then
 	fortune
 fi
 

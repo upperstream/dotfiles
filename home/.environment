@@ -5,7 +5,7 @@ if [ -d "$HOME/.local/bin" ]; then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
-type python > /dev/null && PATH=$PATH:`python -m site --user-base`/bin
+type python > /dev/null 2>&1 && PATH=$PATH:`python -m site --user-base`/bin
 export PATH HOME TERM
 
 MANPATH=/usr/local/man:/usr/share/man:/usr/X11R6/man
