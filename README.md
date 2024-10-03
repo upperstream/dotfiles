@@ -21,7 +21,7 @@ Tools to be installed are:
 
 * [abduco](http://www.brain-dump.org/projects/abduco/) or
   [dtach](http://dtach.sourceforge.net/)
-* [cdiff](https://github.com/ymattw/cdiff)
+* [delta](https://dandavison.github.io/delta/)
 * [dirstack](https://bitbucket.org/upperstream/dirstack)
 * [dvtm](http://www.brain-dump.org/projects/dvtm/)
 * [EditorConfig C Core](https://github.com/editorconfig/editorconfig-core-c)
@@ -115,7 +115,3 @@ See [LICENSE.txt](LICENSE.txt) file for details.
 
 [ISC License]:
     http://www.isc.org/downloads/software-support-policy/isc-license
-
-- - -
-
-Copyright &copy; 2017-2021 Upperstream Software.

@@ -314,6 +314,27 @@ install_cdiff() {
 	esac
 }
 
+install_delta() {
+	case "$os" in
+		OpenBSD)
+			install_package delta
+			;;
+		Linux)
+			case "$distribution" in
+				Debian|Ubuntu)
+					$sudo dpkg -i `download_distfile https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_amd64.deb`
+					;;
+				*)
+					install_package git-delta
+					;;
+			esac
+			;;
+		*)
+			install_package git-delta
+			;;
+	esac
+}
+
 install_dirstack() {
 	if [ "$os" = "Linux" ]; then
 		{ has make || install_package make; } && \
@@ -733,7 +754,7 @@ install() {
 	for t in $@; do
 		case $t in
 			abduco)       install_abduco;;
-			cdiff)        install_cdiff;;
+			delta)        install_delta;;
 			dirstack)     install_dirstack;;
 			dvtm)         install_dvtm;;
 			editorconfig) install_editorconfig;;
@@ -786,8 +807,8 @@ EOF
 	# dirstack
 	has dirstack.sh || install dirstack || report_error
 
-	# cdiff
-	has cdiff || install cdiff || report_error
+	# delta
+	has delta || install delta || report_error
 
 	# adbuco or dtach
 	{ has abduco || has dtach; } || install abduco || report_error
