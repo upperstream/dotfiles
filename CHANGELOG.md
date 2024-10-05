@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unchanged][]
+
+* Added
+  * Support for KSH 2020
+
 ## [20241003][]
 
 * Added
@@ -11,4 +16,5 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
+[Unreleased]: https://github.com/upperstream/dotfiles/compare/20241003...HEAD
 [20241003]: https://github.com/upperstream/dotfiles/releases/tag/20241003

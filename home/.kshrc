@@ -7,8 +7,8 @@ case "$TERM" in
 esac
 
 case "$KSH_VERSION" in
-Version\ AJM\ 93*)
-	# echo KSH93
+Version\ AJM\ 93*|Version\ A\ 2020*)
+	# echo KSH93 or KSH 2020
 	if [ "$_coloured_prompt" = yes ]; then
 		PS1='$(printf "\033[32m%s@%s\033[00m:\033[34m%s\033[00m$ " "${LOGNAME:-${USERNAME:-$(logname)}}" "${HOSTNAME:-$(hostname)}" "$(if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi)")'
 	else
