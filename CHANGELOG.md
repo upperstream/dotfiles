@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20241024][]
 
 * Added
   * Support for KSH 2020
@@ -9,7 +9,10 @@
     [Portable OpenBSD ksh][] (oksh)
   * Stop using `MANPATH` environment variable and let the system
     determine the user's manual search path
+  * Let [nano][] use the [classical keybind](https://lists.gnu.org/archive/html/info-gnu/2024-05/msg00000.html)
 
+
+[nano]: https://www.nano-editor.org/ "nano &ndash; Text editor"
 [Portable OpenBSD ksh]: https://github.com/ibara/oksh
   "ibara/oksh: Portable OpenBSD ksh, based on the Public Domain Korn Shell (pdksh)."
 
@@ -25,7 +28,7 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
-[Unreleased]:
-  https://github.com/upperstream/dotfiles/compare/20241003...HEAD
+[20241024]:
+  https://github.com/upperstream/dotfiles/compare/20241003...20241024
 [20241003]:
   https://github.com/upperstream/dotfiles/releases/tag/20241003

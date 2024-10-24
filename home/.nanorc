@@ -1,1 +1,5 @@
+bind ^F forward main
+bind ^B back main
+bind M-F formatter main
+bind M-B linter main
 set nowrap
