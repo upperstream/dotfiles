@@ -8,20 +8,9 @@ fi
 type python > /dev/null 2>&1 && PATH=$PATH:`python -m site --user-base`/bin
 export PATH HOME TERM
 
-MANPATH=/usr/local/man:/usr/share/man:/usr/X11R6/man
-export MANPATH
-
 case `uname` in
-	FreeBSD|OpenBSD)
-		MANPATH=$HOME/.local/man:$MANPATH
-		;;
 	NetBSD)
 		PATH=/usr/pkg/bin:$PATH
-		MANPATH=$HOME/.local/man:/usr/pkg/man:$MANPATH
-		;;
-	*)
-		MANPATH=$HOME/.local/share/man:$MANPATH
-		;;
 esac
 
 PAGER=more

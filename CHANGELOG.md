@@ -7,6 +7,8 @@
 * Changed
   * Correct the startup script that dit not load `.kshrc` script for
     [Portable OpenBSD ksh][] (oksh)
+  * Stop using `MANPATH` environment variable and let the system
+    determine the user's manual search path
 
 [Portable OpenBSD ksh]: https://github.com/ibara/oksh
   "ibara/oksh: Portable OpenBSD ksh, based on the Public Domain Korn Shell (pdksh)."
