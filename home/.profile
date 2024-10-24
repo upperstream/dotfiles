@@ -20,7 +20,7 @@ elif type fortune >/dev/null 2>&1; then
 fi
 
 case "`echo "$0" | sed 's/^-//;s:^.*/\(.*\)$:\1:'`" in
-	ksh*|mksh)
+	ksh*|mksh|oksh)
 		ENV=$HOME/.kshrc
 		;;
 	jsh|sh)
