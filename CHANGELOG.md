@@ -1,5 +1,10 @@
 # Changelog
 
+## [20250614][]
+
+* Changed
+  * Make directory part brighter in PS1 for bash and ksh
+
 ## [20241024][]
 
 * Added
@@ -28,6 +33,8 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
+[20250614]:
+  https://github.com/upperstream/dotfiles/compare/20241024...20250614
 [20241024]:
   https://github.com/upperstream/dotfiles/compare/20241003...20241024
 [20241003]:
