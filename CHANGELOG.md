@@ -3,6 +3,7 @@
 ## [20250614][]
 
 * Changed
+  * Correct a syntax error in PS1 for OpenBSD ksh
   * Make directory part brighter in PS1 for bash and ksh
 
 ## [20241024][]
