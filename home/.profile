@@ -23,7 +23,7 @@ case "`echo "$0" | sed 's/^-//;s:^.*/\(.*\)$:\1:'`" in
 	ksh*|mksh|oksh)
 		ENV=$HOME/.kshrc
 		;;
-	jsh|sh)
+	jsh|posh|sh)
 		ENV=$HOME/.shrc
 		if [ -f "$ENV" ]; then
 			. "$ENV"
