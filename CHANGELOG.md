@@ -4,6 +4,8 @@
 
 * Added
   * Add support for [Policy-compliant Ordinary SHell] (posh)
+* Changed
+  * PS1 for bash has now the full path to the current working directory
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 
