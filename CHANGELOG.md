@@ -6,6 +6,9 @@
   * Add support for [Policy-compliant Ordinary SHell] (posh)
 * Changed
   * PS1 for bash has now the full path to the current working directory
+  * Default option for `less` to `-RX`
+  * Set `PAGER` to `less`
+  * Unset `GIT_PAGER`
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 

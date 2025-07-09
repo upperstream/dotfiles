@@ -13,8 +13,5 @@ case `uname` in
 		PATH=/usr/pkg/bin:$PATH
 esac
 
-PAGER=more
-export PAGER
-
-GIT_PAGER="less -X"
-export GIT_PAGER
+LESS=-RX; export LESS
+PAGER=less; export PAGER
