@@ -9,6 +9,7 @@
   * Default option for `less` to `-RX`
   * Set `PAGER` to `less`
   * Unset `GIT_PAGER`
+  * Correct PS1 value for ksh
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 

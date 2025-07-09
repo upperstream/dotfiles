@@ -1,12 +1,17 @@
-test -f /etc/ksh.kshrc && . /etc/ksh.kshrc
+{ test -f /etc/ksh.kshrc && . /etc/ksh.kshrc; } || true
 
 set -o emacs
 
-case "$TERM" in
-	xterm-color|*-256color) _coloured_prompt=yes;;
+case "${TERM:-}" in
+	xterm-color|*-256color)
+		_coloured_prompt=yes
+		;;
+	*)
+		_coloured_prompt=no
+		;;
 esac
 
-case "$KSH_VERSION" in
+case "${KSH_VERSION:-}" in
 Version\ AJM\ 93*|Version\ A\ 2020*)
 	# echo KSH93 or KSH 2020
 	if [ "$_coloured_prompt" = "yes" ]; then
@@ -31,7 +36,7 @@ Version\ AJM\ 93*|Version\ A\ 2020*)
 		if [ "$_coloured_prompt" = "yes" ]; then
 			PS1='$(printf "\033[32m$(logname)@$(hostname | cut -f1 -d.)\033[00m:\033[94m"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "\033[00m$ ")'
 		else
-			PS1='$(printf "$`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
+			PS1='$(printf "`logname`@`hostname | cut -f1 -d.`:"; if [ x"${PWD#$HOME}" != x"$PWD" ]; then printf "~${PWD#$HOME}"; else printf "$PWD"; fi; printf "$ ")'
 		fi
 	elif [ "${0#-}" = "oksh" ]; then
 		# echo "Portable OpenBSD ksh(1)"
@@ -56,7 +61,7 @@ Version\ AJM\ 93*|Version\ A\ 2020*)
 	if [ -z "$_hostname" ]; then
 		PS1="`logname`"
 	else
-		PS1="`logname`@$hostname"
+		PS1="`logname`@$_hostname"
 	fi
 	unset _hostname
 	case `id -u` in
@@ -69,4 +74,6 @@ esac
 export PS1
 unset _coloured_prompt
 
-test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh
+{ test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh; } || true
+
+# echo "leaving $HOME/.kshrc"
