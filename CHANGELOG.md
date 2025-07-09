@@ -10,6 +10,7 @@
   * Set `PAGER` to `less`
   * Unset `GIT_PAGER`
   * Correct PS1 value for ksh
+  * Make `.profile` work when it is read from `.xsession`
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 

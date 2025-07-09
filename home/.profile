@@ -1,5 +1,8 @@
 # shellcheck disable=SC1090,SC1091,SC2006,SC2148
+set -eu
 #set -x
+
+# echo "entering $HOME/.profile"
 
 if [ -f "$HOME/.environment" ]; then
 	. "$HOME/.environment"
@@ -19,15 +22,17 @@ elif type fortune >/dev/null 2>&1; then
 	fortune
 fi
 
-case "`echo "$0" | sed 's/^-//;s:^.*/\(.*\)$:\1:'`" in
+shell=${0##*/}
+shell=${shell#-}
+shell=${shell#.xsession}
+# echo "shell=${shell:=${SHELL##*/}}"
+
+case "$shell" in
 	ksh*|mksh|oksh)
 		ENV=$HOME/.kshrc
 		;;
 	jsh|posh|sh)
 		ENV=$HOME/.shrc
-		if [ -f "$ENV" ]; then
-			. "$ENV"
-		fi
 		;;
 	ash)
 		ENV=$HOME/.shrc
@@ -37,10 +42,13 @@ case "`echo "$0" | sed 's/^-//;s:^.*/\(.*\)$:\1:'`" in
 		;;
 	bash)
 		ENV=$HOME/.bashrc
-		if [ -f "$ENV" ]; then
-			. "$ENV"
-		fi
 		;;
 esac
+unset shell
 
 export ENV
+if [ -f "$ENV" ]; then
+	. "$ENV"
+fi
+
+# echo "leaving $HOME/.profile"
