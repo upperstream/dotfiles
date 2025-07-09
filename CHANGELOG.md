@@ -12,6 +12,8 @@
   * Correct PS1 value for ksh
   * Make `.profile` work when it is read from `.xsession`
   * `.profile` does not source `$ENV` file any longer
+  * The host specific environment file `.environment.{hostname}` is
+    referred to without domain part
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 

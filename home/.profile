@@ -7,9 +7,14 @@ set -eu
 if [ -f "$HOME/.environment" ]; then
 	. "$HOME/.environment"
 fi
-if type hostname > /dev/null 2>&1 && [ -f "$HOME/.environment.`hostname`" ]; then
-	. "$HOME/.environment.`hostname`"
+
+if type hostname > /dev/null 2>&1; then
+	_hostname=`hostname`
+	if [ -f "$HOME/.environment.${_hostname%%.*}" ]; then
+		. "$HOME/.environment.${_hostname%%.*}"
+	fi
 fi
+
 for f in "$HOME"/.environment_*; do
 	if [ -f "$f" ]; then
 		. "$f"
