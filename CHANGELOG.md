@@ -11,6 +11,7 @@
   * Unset `GIT_PAGER`
   * Correct PS1 value for ksh
   * Make `.profile` work when it is read from `.xsession`
+  * `.profile` does not source `$ENV` file any longer
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 

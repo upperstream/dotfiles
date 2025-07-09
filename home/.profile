@@ -47,8 +47,5 @@ esac
 unset shell
 
 export ENV
-if [ -f "$ENV" ]; then
-	. "$ENV"
-fi
 
 # echo "leaving $HOME/.profile"
