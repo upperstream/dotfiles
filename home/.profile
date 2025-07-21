@@ -1,5 +1,5 @@
 # shellcheck disable=SC1090,SC1091,SC2006,SC2148
-set -eu
+#set -eu
 #set -x
 
 # echo "entering $HOME/.profile"
@@ -30,7 +30,9 @@ fi
 shell=${0##*/}
 shell=${shell#-}
 shell=${shell#.xsession}
-# echo "shell=${shell:=${SHELL##*/}}"
+shell=${shell#Xsession}
+shell=${shell:=${SHELL##*/}}
+# echo "shell=$shell"
 
 case "$shell" in
 	ksh*|mksh|oksh)
@@ -52,5 +54,6 @@ esac
 unset shell
 
 export ENV
+# echo "ENV=$ENV"
 
 # echo "leaving $HOME/.profile"

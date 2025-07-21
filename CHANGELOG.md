@@ -10,7 +10,7 @@
   * Set `PAGER` to `less`
   * Unset `GIT_PAGER`
   * Correct PS1 value for ksh
-  * Make `.profile` work when it is read from `.xsession`
+  * Make `.profile` work when it is read from `.xsession` or `Xsession`
   * `.profile` does not source `$ENV` file any longer
   * The host specific environment file `.environment.{hostname}` is
     referred to without domain part
