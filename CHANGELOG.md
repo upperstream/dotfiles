@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20260215][]
 
 * Added
   * Add support for [Policy-compliant Ordinary SHell] (posh)
@@ -14,6 +14,7 @@
   * `.profile` does not source `$ENV` file any longer
   * The host specific environment file `.environment.{hostname}` is
     referred to without domain part
+  * Use `rust-all` package for Rust binary package for Debian and Devuan
 
 [Policy-compliant Ordinary SHell]: https://salsa.debian.org/clint/posh
 
@@ -50,8 +51,8 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
-[Unreleased]:
-  https://github.com/upperstream/dotfiles/compare/20250614...HEAD
+[20260215]:
+  https://github.com/upperstream/dotfiles/compare/20250614...20260215
 [20250614]:
   https://github.com/upperstream/dotfiles/compare/20241024...20250614
 [20241024]:

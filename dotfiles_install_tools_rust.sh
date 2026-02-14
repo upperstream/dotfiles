@@ -22,6 +22,9 @@ install_rust() {
 				Alpine)
 					alpine_enable_community_repo && linux_install_package rust
 					;;
+				Debian|Devuan)
+					linux_install_package rust-all
+					;;
 				*)
 					linux_install_package rust
 					;;
