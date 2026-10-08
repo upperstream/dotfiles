@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased][]
+
+* Changed
+  * Make `.bash_profile` source `$ENV` after `.profile`
+  * Quote paths in `.bash_profile` to handle spaces correctly
+
 ## [20260215][]
 
 * Added
@@ -51,6 +57,8 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
+[Unreleased]:
+  https://github.com/upperstream/dotfiles/compare/20260215...HEAD
 [20260215]:
   https://github.com/upperstream/dotfiles/compare/20250614...20260215
 [20250614]:
