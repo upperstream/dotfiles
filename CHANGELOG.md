@@ -5,6 +5,8 @@
 * Changed
   * Make `.bash_profile` source `$ENV` after `.profile`
   * Quote paths in `.bash_profile` to handle spaces correctly
+  * Move loading of host-specific `.environment.{hostname}` and
+    `.environment_*` files from `.profile` to `.environment`
 
 ## [20260215][]
 

@@ -15,3 +15,16 @@ esac
 
 LESS=-RX; export LESS
 PAGER=less; export PAGER
+
+if type hostname > /dev/null 2>&1; then
+	_hostname=`hostname`
+	if [ -f "$HOME/.environment.${_hostname%%.*}" ]; then
+		. "$HOME/.environment.${_hostname%%.*}"
+	fi
+fi
+
+for f in "$HOME"/.environment_*; do
+	if [ -f "$f" ]; then
+		. "$f"
+	fi
+done
