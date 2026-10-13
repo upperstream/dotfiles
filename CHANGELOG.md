@@ -7,6 +7,7 @@
   * Quote paths in `.bash_profile` to handle spaces correctly
   * Move loading of host-specific `.environment.{hostname}` and
     `.environment_*` files from `.profile` to `.environment`
+  * Clear the selected package list in the Emacs configuration
 
 ## [20260215][]
 
