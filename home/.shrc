@@ -23,3 +23,7 @@ fi
 
 # shellcheck disable=SC1091
 test -f "$HOME/.local/bin/dirstack.sh" && . "$HOME/.local/bin/dirstack.sh"
+
+if [ -f $HOME/.environment ]; then
+	. $HOME/.environment
+fi

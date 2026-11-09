@@ -4,10 +4,6 @@
 
 # echo "entering $HOME/.profile"
 
-if [ -f "$HOME/.environment" ]; then
-	. "$HOME/.environment"
-fi
-
 if [ "`uname`" = FreeBSD ]; then
 	test -x /usr/bin/fortune && /usr/bin/fortune freebsd-tips
 elif type fortune >/dev/null 2>&1; then

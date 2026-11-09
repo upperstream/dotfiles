@@ -14,4 +14,8 @@ else
 fi
 unset _coloured_prompt
 
+if [ -f $HOME/.environment ]; then
+	. $HOME/.environment
+fi
+
 #echo "leaving $HOME/.bashrc"

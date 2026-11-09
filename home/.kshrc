@@ -76,4 +76,8 @@ unset _coloured_prompt
 
 { test -f $HOME/.local/bin/dirstack.sh && . $HOME/.local/bin/dirstack.sh; } || true
 
+if [ -f $HOME/.environment ]; then
+	. $HOME/.environment
+fi
+
 # echo "leaving $HOME/.kshrc"

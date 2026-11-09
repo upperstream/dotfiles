@@ -8,6 +8,8 @@
   * Move loading of host-specific `.environment.{hostname}` and
     `.environment_*` files from `.profile` to `.environment`
   * Clear the selected package list in the Emacs configuration
+  * Move loading of `.environment` from `.profile` to `.bashrc`,
+    `.kshrc`, and `.shrc`
 
 ## [20260215][]
 
