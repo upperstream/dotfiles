@@ -58,6 +58,7 @@ tools with a leading `-s` option:
   tools
 * [`terraform`](Readme_terraform.md) - development environment with
   [Terraform][]
+* [`zig`](Readme_zig.md) - development environment with [Zig][] tools
 
 At the time of writing this, the script supports [FreeBSD][],
 [macOS][], [NetBSD][], [OpenBSD][], and the following [Linux][]
@@ -89,6 +90,7 @@ distributions:
 [Rust]: https://www.rust-lang.org/ "Rust Programming Language"
 [Scala]: https://www.scala-lang.org/ "The Scala Programming Language"
 [Terraform]: https://www.terraform.io/ "Terraform by HashiCorp"
+[Zig]: https://ziglang.org/ "Zig Programming Language"
 
 ## Create symbolic links to dotfiles
 

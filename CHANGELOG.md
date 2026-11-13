@@ -2,6 +2,9 @@
 
 ## [Unreleased][]
 
+* Added
+  * Zig installation on Linux, macOS, FreeBSD, OpenBSD, and NetBSD
+  * Emacs configuration for Zig source and ZON files in the Zig set
 * Changed
   * Make `.bash_profile` source `$ENV` after `.profile`
   * Quote paths in `.bash_profile` to handle spaces correctly
