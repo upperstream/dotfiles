@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20261114][]
 
 * Added
   * Zig installation on Linux, macOS, FreeBSD, OpenBSD, and NetBSD
@@ -65,8 +65,8 @@
 [Ydiff]: https://github.com/ymattw/ydiff
    "GitHub - ymattw/ydiff: View colored, incremental diff in workspace or from stdin with side by side and auto pager support"
 
-[Unreleased]:
-  https://github.com/upperstream/dotfiles/compare/20260215...HEAD
+[20261114]:
+  https://github.com/upperstream/dotfiles/compare/20260215...20261114
 [20260215]:
   https://github.com/upperstream/dotfiles/compare/20250614...20260215
 [20250614]:
