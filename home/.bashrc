@@ -4,7 +4,7 @@
 set -o emacs
 
 case "$TERM" in
-	xterm-color|*-256color) _coloured_prompt=yes;;
+	xterm-color|*-256color|*-ghostty) _coloured_prompt=yes;;
 esac
 
 if [ "$_coloured_prompt" = yes ]; then

@@ -13,6 +13,7 @@
   * Clear the selected package list in the Emacs configuration
   * Move loading of `.environment` from `.profile` to `.bashrc`,
     `.kshrc`, and `.shrc`
+  * Enable coloured prompt for Ghostty
 
 ## [20260215][]
 
